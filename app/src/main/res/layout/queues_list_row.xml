@@ -1,0 +1,28 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/queueListRowItem"
+    >
+
+    <TextView
+        android:id="@+id/queue_name"
+        style="@style/queueListRowItem"
+        android:layout_weight="0.8"
+        android:textAlignment="textStart"
+        />
+    <TextView
+        android:id="@+id/queue_ready"
+        style="@style/queueListRowItem"
+        android:layout_weight="1"
+        />
+    <TextView
+        android:id="@+id/queue_unacked"
+        style="@style/queueListRowItem"
+        android:layout_weight="1"
+        />
+    <TextView
+        android:id="@+id/queue_total"
+        style="@style/queueListRowItem"
+        android:layout_weight="1"
+        />
+
+</LinearLayout>
