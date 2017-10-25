@@ -63,11 +63,13 @@ public class QueuesRecyclerFragment extends Fragment {
     }
 
     private void initData() {
+        QueuesListApi.getList(getContext());
         data = getList();
     }
 
     private ArrayList<QueueInfo> getList() {
-        return QueuesListApi.getList();
+        return new ArrayList<>();
+//        return QueuesListApi.getList(getContext());
     }
 
     public boolean updateList() {

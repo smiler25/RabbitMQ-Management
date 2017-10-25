@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.smiler.rabbitmanagement.R;
+import com.smiler.rabbitmanagement.api.OverviewApi;
 
 public class OverviewFragment extends Fragment {
-    private static final String ARG_SECTION_NUMBER = "section_number";
 
     public OverviewFragment() {
     }
@@ -21,9 +21,9 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.overview, container, false);
+        OverviewApi.getInfo(getContext());
 //        TextView textView = rootView.findViewById(R.id.section_label);
 //        textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-        return rootView;
+        return inflater.inflate(R.layout.overview, container, false);
     }
 }

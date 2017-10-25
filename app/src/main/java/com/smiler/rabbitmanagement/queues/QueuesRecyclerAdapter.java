@@ -13,6 +13,8 @@ import com.smiler.rabbitmanagement.detail.QueueInfo;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import lombok.Getter;
 
 
@@ -108,20 +110,20 @@ public class QueuesRecyclerAdapter extends RecyclerView.Adapter<QueuesRecyclerAd
 //        notifyDataSetChanged();
 //    }
 
-
     static class ViewHolder extends RecyclerView.ViewHolder {
         @Getter
         private String name;
         private final View root;
         private ItemsCallback callback;
-        private final TextView viewName;
-        private final TextView viewReady;
-        private final TextView viewUnacked;
-        private final TextView viewTotal;
+        @BindView(R.id.queue_name) TextView viewName;
+        @BindView(R.id.queue_ready) TextView viewReady;
+        @BindView(R.id.queue_unacked) TextView viewUnacked;
+        @BindView(R.id.queue_total) TextView viewTotal;
 
         ViewHolder(View v) {
             super(v);
             root = v;
+            ButterKnife.bind(this, root);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -139,10 +141,6 @@ public class QueuesRecyclerAdapter extends RecyclerView.Adapter<QueuesRecyclerAd
                     return false;
                 }
             });
-            viewName = v.findViewById(R.id.queue_name);
-            viewReady = v.findViewById(R.id.queue_ready);
-            viewUnacked = v.findViewById(R.id.queue_unacked);
-            viewTotal = v.findViewById(R.id.queue_total);
         }
 
         public void setView(QueueInfo value) {
@@ -155,7 +153,7 @@ public class QueuesRecyclerAdapter extends RecyclerView.Adapter<QueuesRecyclerAd
 
         public void setCallback(ItemsCallback callback) { this.callback = callback; }
 
-        //        public void setSelected(boolean selected) {
+//        public void setSelected(boolean selected) {
 //            root.setSelected(selected);
 //        }
     }
