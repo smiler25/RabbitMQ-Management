@@ -15,7 +15,12 @@ import java.util.ArrayList;
 
 public class QueuesListApi {
 
-    public static void getList(Context context) {
+    public interface QueuesListApiCallback {
+        void onResult(ArrayList<QueueInfo> result);
+        void onError();
+    }
+
+    public static void getList(Context context, final QueuesListApiCallback callback) {
         String domain = "http://89.108.84.67:15672";
 
         ApiRequest stringRequest = new ApiRequest(Request.Method.GET, domain + RequestPath.QUEUES_LIST, BaseApi.getHeaders(),
@@ -24,7 +29,8 @@ public class QueuesListApi {
                     public void onResponse(String response) {
                         final ObjectMapper mapper = new ObjectMapper();
                         try {
-                            System.out.println("QueueInfo = " + mapper.readValue(response, new TypeReference<ArrayList<QueueInfo>>(){}));
+                            System.out.println("QueuesListApi result = " + mapper.readValue(response, new TypeReference<ArrayList<QueueInfo>>(){}));
+                            callback.onResult((ArrayList<QueueInfo>) mapper.readValue(response, new TypeReference<ArrayList<QueueInfo>>(){}));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -33,6 +39,7 @@ public class QueuesListApi {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println("Error " + error);
+                callback.onError();
             }
         });
 

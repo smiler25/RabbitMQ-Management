@@ -12,7 +12,12 @@ import com.smiler.rabbitmanagement.overview.Overview;
 import java.io.IOException;
 
 public class OverviewApi {
-    public static void getInfo(Context context) {
+    public interface OverviewApiCallback {
+        void onResult(Overview result);
+        void onError();
+    }
+
+    public static void getInfo(Context context, final OverviewApiCallback callback) {
         String domain = "http://89.108.84.67:15672";
 
         ApiRequest stringRequest = new ApiRequest(Request.Method.GET, domain + RequestPath.OVERVIEW, BaseApi.getHeaders(),
@@ -21,7 +26,8 @@ public class OverviewApi {
                     public void onResponse(String response) {
                         final ObjectMapper mapper = new ObjectMapper();
                         try {
-                            System.out.println("Overview = " + mapper.readValue(response, Overview.class));
+                            System.out.println("OverviewApi result = " + mapper.readValue(response, Overview.class));
+                            callback.onResult(mapper.readValue(response, Overview.class));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -30,6 +36,7 @@ public class OverviewApi {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println("Error " + error);
+                callback.onError();
             }
         });
 

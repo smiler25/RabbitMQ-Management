@@ -10,9 +10,14 @@ import android.widget.TextView;
 
 import com.smiler.rabbitmanagement.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class OverviewPanel extends LinearLayout {
-    private TextView title;
-    private TextView value;
+    @BindView(R.id.panel_title)
+    TextView title;
+    @BindView(R.id.panel_value)
+    TextView value;
 
     public OverviewPanel(Context context) {
         super(context);
@@ -22,9 +27,9 @@ public class OverviewPanel extends LinearLayout {
         super(context, attrs);
 
         LayoutInflater.from(context).inflate(R.layout.overview_panel, this);
+        ButterKnife.bind(this);
 
 //        setBackgroundResource(R.drawable.background);
-
 //        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.OverviewPanel, 0, 0);
 //        try {
 //            mShowText = a.getBoolean(R.styleable.PieChart_showText, false);
@@ -33,21 +38,11 @@ public class OverviewPanel extends LinearLayout {
 //            a.recycle();
 //        }
 
-//        String titleText = a.getString(R.styleable.ColorOptionsView_titleText);
-//        @SuppressWarnings("ResourceAsColor")
-//        int valueColor = a.getColor(R.styleable.ColorOptionsView_valueColor,
-//                android.R.color.holo_blue_light);
-//        a.recycle();
-//
         setOrientation(LinearLayout.HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
-        title = findViewById(R.id.panel_title);
-        value = findViewById(R.id.panel_value);
-        title.setText("titleText");
-        value.setText("123400");
-
-
+        title.setText(R.string.title);
+        value.setText(R.string.value);
     }
 
     public OverviewPanel(Context context, @Nullable AttributeSet attrs, int defStyle) {
@@ -55,4 +50,13 @@ public class OverviewPanel extends LinearLayout {
 
     }
 
+    public OverviewPanel setTitle(String value) {
+        title.setText(value);
+        return this;
+    }
+
+    public OverviewPanel setValue(String value) {
+        this.value.setText(value);
+        return this;
+    }
 }

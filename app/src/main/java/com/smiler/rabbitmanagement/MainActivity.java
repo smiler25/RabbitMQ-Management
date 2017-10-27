@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
 import com.smiler.rabbitmanagement.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity
 
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
+    private QueueDetailFragment queueDetailFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,11 +124,11 @@ public class MainActivity extends AppCompatActivity
 //        View view = findViewById(R.id.details_frag);
 //        if (view != null) {
 //            wide = true;
-//            detailViewFrag = new TeamViewFragment();
-//            transaction.replace(R.id.details_frag, detailViewFrag, TeamViewFragment.TAG);
+//            queueDetailFrag = new QueueDetailFragment();
+//            transaction.replace(R.id.details_frag, queueDetailFrag, QueueDetailFragment.TAG);
 //        } else {
 //            wide = false;
-//            detailViewFrag = null;
+//            queueDetailFrag = null;
 //        }
 //        transaction.commit();
 //    }
@@ -141,17 +143,18 @@ public class MainActivity extends AppCompatActivity
 //        }
 //    }
 
-    //    private void openTeamInfo() {
-//        if (wide && detailViewFrag != null) {
-//            detailViewFrag.updateContent(selected);
+    private void openQueueDetails() {
+//        String name = "";
+//        if (queueDetailFrag != null && queueDetailFrag.isAdded()) {
+//            queueDetailFrag.updateContent(name);
 //
 //        } else {
-//            Fragment selectedFrag = TeamViewFragment.newInstance(selected);
+//            Fragment selectedFrag = QueueDetailFragment.newInstance(name);
 //            getSupportFragmentManager().beginTransaction()
 //                    .addToBackStack(null)
-//                    .add(R.id.recycler_content_fragment, selectedFrag, TeamViewFragment.TAG)
+//                    .add(R.id.recycler_content_fragment, selectedFrag, QueueDetailFragment.TAG)
 //                    .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //                    .commit();
 //        }
-//    }
+    }
 }

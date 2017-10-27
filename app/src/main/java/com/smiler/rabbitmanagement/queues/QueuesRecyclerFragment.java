@@ -7,10 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.api.QueuesListApi;
-import com.smiler.rabbitmanagement.base.interfaces.ListListener;
+import com.smiler.rabbitmanagement.base.interfaces.QueueListListener;
 import com.smiler.rabbitmanagement.detail.QueueInfo;
 
 import java.util.ArrayList;
@@ -21,8 +22,6 @@ public class QueuesRecyclerFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private QueuesRecyclerAdapter adapter;
-    private ListListener listener;
-    private ArrayList<QueueInfo> data;
 
     public static QueuesRecyclerFragment newInstance() {
         return new QueuesRecyclerFragment();
@@ -59,36 +58,29 @@ public class QueuesRecyclerFragment extends Fragment {
     }
 
     private void initAdapter() {
-        adapter = new QueuesRecyclerAdapter(data);
+        adapter = new QueuesRecyclerAdapter();
+        adapter.setListener(new QueueListListener() {
+            @Override
+            public void onListElementClick(QueueInfo queueInfo) {
+                System.out.println("queueInfo = " + queueInfo);
+                Toast.makeText(getContext(), queueInfo.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void initData() {
-        QueuesListApi.getList(getContext());
-        data = getList();
+        QueuesListApi.getList(getContext(), new QueuesListApi.QueuesListApiCallback() {
+            @Override
+            public void onResult(ArrayList<QueueInfo> result) {
+                if (result != null) {
+                    adapter.updateData(result);
+                }
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
-
-    private ArrayList<QueueInfo> getList() {
-        return new ArrayList<>();
-//        return QueuesListApi.getList(getContext());
-    }
-
-    public boolean updateList() {
-        adapter.notifyDataSetChanged();
-        return adapter.getItemCount() == 0;
-    }
-
-    public void setListener(ListListener listener) {
-        this.listener = listener;
-        adapter.setListener(listener);
-    }
-
-//    public void setMode(CABListener listener) {}
-
-//    public void clearSelection() {
-//        adapter.clearSelection();
-//    }
-
-//    public void deleteSelection() {
-//        adapter.deleteSelection();
-//    }
 }

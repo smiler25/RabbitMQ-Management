@@ -12,10 +12,16 @@ import com.smiler.rabbitmanagement.api.QueueDetailApi;
 
 public class QueueDetailFragment extends Fragment {
     public static final String TAG = "RMQ-QueueDetailFragment";
+    private static final String ARG_NAME = "name";
+    private String name;
     private QueueInfo data;
 
-    public static QueueDetailFragment newInstance() {
-        return new QueueDetailFragment();
+    public static QueueDetailFragment newInstance(String name) {
+        QueueDetailFragment fragment = new QueueDetailFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_NAME, name);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -33,9 +39,14 @@ public class QueueDetailFragment extends Fragment {
     }
 
     private void initData() {
-        data = QueueDetailApi.getInfo();
+        data = QueueDetailApi.getInfo(name);
     }
 
-//    public void setListener(ListListener listener) {
+    public void updateContent(String name) {
+        this.name = name;
+        initData();
+    }
+
+    //    public void setListener(QueueListListener listener) {
 //    }
 }

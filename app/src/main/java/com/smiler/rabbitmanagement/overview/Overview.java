@@ -33,7 +33,7 @@ public class Overview {
     @ToString
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private class OverviewQueueTotals {
+    public class OverviewQueueTotals {
         @JsonProperty("messages_ready")
         private String messagesReady;
 
@@ -46,7 +46,7 @@ public class Overview {
     @ToString
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private class OverviewObjectTotals {
+    public class OverviewObjectTotals {
         private String  consumers;
         private String  queues;
         private String  exchanges;

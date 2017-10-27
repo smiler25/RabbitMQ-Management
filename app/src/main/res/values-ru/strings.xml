@@ -1,4 +1,13 @@
 <resources>
     <string name="overview">Обзор</string>
     <string name="queues">Очереди</string>
+    <string name="action_settings">Настройки</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="pref_header_general">Общее</string>
+    <string name="total">Всего</string>
+    <string name="unacked">В обработке</string>
+    <string name="ready">Доступно</string>
+    <string name="name">Название</string>
+    <string name="title">Название</string>
+    <string name="value">Значение</string>
 </resources>

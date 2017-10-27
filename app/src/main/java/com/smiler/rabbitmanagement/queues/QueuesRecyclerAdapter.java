@@ -1,5 +1,6 @@
 package com.smiler.rabbitmanagement.queues;
 
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.smiler.rabbitmanagement.R;
-import com.smiler.rabbitmanagement.base.interfaces.ItemsCallback;
-import com.smiler.rabbitmanagement.base.interfaces.ListListener;
+import com.smiler.rabbitmanagement.base.interfaces.QueueListListener;
 import com.smiler.rabbitmanagement.detail.QueueInfo;
 
 import java.util.ArrayList;
@@ -16,53 +16,17 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Getter;
+import lombok.Setter;
 
 
 public class QueuesRecyclerAdapter extends RecyclerView.Adapter<QueuesRecyclerAdapter.ViewHolder> {
     private static final String TAG = "RMQ-QueuesRecyclerAdapter";
-    private ListListener listener;
-    private boolean multiSelection = false;
-    private View selectedItem;
-    private ItemsCallback callback;
-    private ArrayList<Integer> selectedIds = new ArrayList<>();
-    private final ArrayList<QueueInfo> data;
+    @Setter
+    private QueueListListener listener;
+    private ArrayList<QueueInfo> data;
 
-    public QueuesRecyclerAdapter(ArrayList<QueueInfo> data) {
+    QueuesRecyclerAdapter() {
         super();
-        this.data = data;
-        callback = new ItemsCallback() {
-            @Override
-            public void onElementLongClick(View view) {
-                if (!multiSelection) {
-                    multiSelection = true;
-                    selectedIds.clear();
-                    if (selectedItem != null) {
-                        selectedItem.setSelected(false);
-                    }
-                    listener.onListElementLongClick(0);
-                }
-            }
-
-            @Override
-            public void onElementClick(View view) {
-                view.setSelected(!view.isSelected());
-                if (multiSelection) {
-                    if (view.isSelected()) {
-                        selectedIds.add((Integer) view.getTag());
-                    } else {
-                        selectedIds.remove((Integer) view.getTag());
-                    }
-                    listener.onListElementClick(selectedIds.size());
-                } else {
-                    selectedIds.clear();
-                    if (selectedItem != null) {
-                        selectedItem.setSelected(false);
-                    }
-                    selectedItem = view;
-                    listener.onListElementClick((int) view.getTag());
-                }
-            }
-        };
     }
 
     @Override
@@ -76,45 +40,28 @@ public class QueuesRecyclerAdapter extends RecyclerView.Adapter<QueuesRecyclerAd
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         QueueInfo value = data.get(position);
         viewHolder.setView(value);
-//        viewHolder.setId(value.getId());
-//        viewHolder.setSelected(selectedIds.indexOf(value.getId()) != -1);
-        viewHolder.setCallback(callback);
+        viewHolder.setCallback(listener);
+    }
+
+    void updateData(ArrayList<QueueInfo> data) {
+        this.data = data;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
+        if (data == null) {
+            return 0;
+        }
         return data.size();
     }
 
-//    public void deleteSelection() {
-////        if (selectedIds.size() > 0) {
-////            RealmController.with().deleteResults(selectedIds.toArray(new Integer[selectedIds.size()]));
-////        }
-////        selectedItem = null;
-////        selectedIds.clear();
-////        multiSelection = false;
-////        notifyDataSetChanged();
-//    }
-
-    public void setListener(ListListener listener) {
-        this.listener = listener;
-    }
-
-//    public void clearSelection() {
-//        if (selectedItem != null) {
-//            selectedItem.setSelected(false);
-//            selectedItem = null;
-//        }
-//        selectedIds.clear();
-//        multiSelection = false;
-//        notifyDataSetChanged();
-//    }
-
     static class ViewHolder extends RecyclerView.ViewHolder {
         @Getter
-        private String name;
+        private QueueInfo queueInfo;
+        @Setter
+        private QueueListListener callback;
         private final View root;
-        private ItemsCallback callback;
         @BindView(R.id.queue_name) TextView viewName;
         @BindView(R.id.queue_ready) TextView viewReady;
         @BindView(R.id.queue_unacked) TextView viewUnacked;
@@ -128,33 +75,19 @@ public class QueuesRecyclerAdapter extends RecyclerView.Adapter<QueuesRecyclerAd
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onElementClick(root);
+                        callback.onListElementClick(queueInfo);
                     }
-                }
-            });
-            v.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (callback != null) {
-                        callback.onElementLongClick(root);
-                    }
-                    return false;
                 }
             });
         }
 
+        @SuppressLint("SetTextI18n")
         public void setView(QueueInfo value) {
-            name = value.getName();
+            queueInfo = value;
             viewName.setText(value.getName());
             viewReady.setText(Long.toString(value.getReady()));
             viewUnacked.setText(Long.toString(value.getUnacked()));
             viewTotal.setText(Long.toString(value.getTotal()));
         };
-
-        public void setCallback(ItemsCallback callback) { this.callback = callback; }
-
-//        public void setSelected(boolean selected) {
-//            root.setSelected(selected);
-//        }
     }
 }
