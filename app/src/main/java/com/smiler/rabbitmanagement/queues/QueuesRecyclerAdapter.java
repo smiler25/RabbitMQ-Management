@@ -41,6 +41,11 @@ public class QueuesRecyclerAdapter extends RecyclerView.Adapter<QueuesRecyclerAd
         QueueInfo value = data.get(position);
         viewHolder.setView(value);
         viewHolder.setCallback(listener);
+        if((position % 2 == 0)){
+            viewHolder.root.setBackgroundResource(R.color.listEven);
+        } else {
+            viewHolder.root.setBackgroundResource(R.color.listOdd);
+        }
     }
 
     void updateData(ArrayList<QueueInfo> data) {

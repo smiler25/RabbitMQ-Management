@@ -1,13 +1,31 @@
 <resources>
     <string name="overview">Обзор</string>
     <string name="queues">Очереди</string>
-    <string name="action_settings">Настройки</string>
-    <string name="title_activity_settings">Настройки</string>
-    <string name="pref_header_general">Общее</string>
+    <string name="settings">Настройки</string>
+
     <string name="total">Всего</string>
     <string name="unacked">В обработке</string>
     <string name="ready">Доступно</string>
     <string name="name">Название</string>
     <string name="title">Название</string>
     <string name="value">Значение</string>
+    <string name="select_profile">Выбрать профиль</string>
+    <string name="action_apply">Выбрать</string>
+    <string name="action_apply_save">Выбрать и сохранить</string>
+    <string name="action_cancel">Отменить</string>
+    <string name="profile">Профиль</string>
+    <string name="password">Пароль</string>
+    <string name="login">Логин</string>
+    <string name="select">Выбрать</string>
+    <string name="current_profile">Профиль: %s</string>
+    <string name="api_error_list">Ошибка при получении списка (%s)</string>
+    <string name="api_error_overview">Ошибка получения общей информации (%s)</string>
+    <string name="profile_null">Не выбран профиль</string>
+    <string name="update_in_progress">Данные обновляются</string>
+    <string name="host">Хост</string>
+    <string name="remember">Запомнить</string>
+    <string name="filter">Фильтр</string>
+    <string name="filter_queues">Отфильтровать очереди</string>
+    <string name="remember_credentials">Запомнить учетные данные</string>
+    <string name="use_regex">Использовать рег. выражение</string>
 </resources>

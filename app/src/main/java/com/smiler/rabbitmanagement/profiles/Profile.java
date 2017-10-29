@@ -23,6 +23,12 @@ public class Profile {
         return Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
     }
 
+    private Profile(String title, String host, String authKey) {
+        this.title = title;
+        this.host = host;
+        this.authKey = authKey;
+    }
+
     public Profile(String title, String host, String login, String password) {
         if (host.endsWith("/")) {
             host = host.substring(0, host.length() - 1);
@@ -44,10 +50,12 @@ public class Profile {
         return this;
     }
 
-    public Profile getProfile(Activity activity) {
+    public static Profile getProfile(Activity activity) {
         SharedPreferences statePref = activity.getPreferences(Context.MODE_PRIVATE);
-        login = statePref.getString(STATE_HOST, null);
-        authKey = statePref.getString(STATE_KEY, null);
-        return this;
+        return new Profile(
+                statePref.getString(STATE_TITLE, null),
+                statePref.getString(STATE_HOST, null),
+                statePref.getString(STATE_KEY, null)
+        );
     }
 }

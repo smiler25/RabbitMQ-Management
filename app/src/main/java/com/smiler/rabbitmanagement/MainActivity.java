@@ -18,11 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
 import com.smiler.rabbitmanagement.overview.OverviewFragment;
 import com.smiler.rabbitmanagement.profiles.Profile;
 import com.smiler.rabbitmanagement.profiles.ProfileSelector;
+import com.smiler.rabbitmanagement.queues.FilterDialog;
 import com.smiler.rabbitmanagement.queues.QueuesRecyclerFragment;
 import com.smiler.rabbitmanagement.settings.SettingsActivity;
 
@@ -31,17 +33,26 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        ProfileSelector.ProfileSelectorListener {
+        ProfileSelector.ProfileSelectorListener, FilterDialog.FilterDialogListener {
 
     private SectionsPagerAdapter sectionsPagerAdapter;
     @BindView(R.id.container)
     ViewPager viewPager;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+
+    TextView drawerProfileTitle;
+
     private QueueDetailFragment queueDetailFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Profile profile = Profile.getProfile(this);
+        setProfile(profile);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
@@ -62,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -76,13 +86,20 @@ public class MainActivity extends AppCompatActivity implements
                 showProfileDialog();
             }
         });
+        drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
+        if (profile.getTitle() != null || !profile.getTitle().equals("")) {
+            setDrawerProfile(profile);
+        }
 
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void setDrawerProfile(Profile profile) {
+        drawerProfileTitle.setText(String.format(getString(R.string.current_profile), profile.getTitle()));
+    }
+
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -99,11 +116,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            runSettingsActivity();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                runSettingsActivity();
+                return true;
+            case R.id.action_filter:
+                showFilterDialog();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -112,18 +131,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_camera:
-                // Handle the camera action
-                break;
             case R.id.nav_settings:
                 runSettingsActivity();
                 break;
-            case R.id.nav_send:
-
-                break;
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -134,6 +145,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private void showProfileDialog() {
         ProfileSelector.newInstance().setListener(this).show(getFragmentManager(), ProfileSelector.TAG);
+    }
+
+    private void showFilterDialog() {
+        FilterDialog.newInstance().setListener(this).show(getFragmentManager(), FilterDialog.TAG);
     }
 
     private void updateData() {
@@ -156,24 +171,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    //    private void initFragments() {
-//        TeamsRecyclerFragment fragment = new TeamsRecyclerFragment();
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//
-//        transaction.replace(R.id.recycler_content_fragment, fragment, TeamsRecyclerFragment.TAG);
-//
-//        View view = findViewById(R.id.details_frag);
-//        if (view != null) {
-//            wide = true;
-//            queueDetailFrag = new QueueDetailFragment();
-//            transaction.replace(R.id.details_frag, queueDetailFrag, QueueDetailFragment.TAG);
-//        } else {
-//            wide = false;
-//            queueDetailFrag = null;
-//        }
-//        transaction.commit();
-//    }
-//
 //    @Override
 //    public void onBackPressed() {
 //        if (getSupportFragmentManager().getBackStackEntryCount() > 0 ){
@@ -184,33 +181,31 @@ public class MainActivity extends AppCompatActivity implements
 //        }
 //    }
 
-    private void openQueueDetails() {
-//        String name = "";
-//        if (queueDetailFrag != null && queueDetailFrag.isAdded()) {
-//            queueDetailFrag.updateContent(name);
-//
-//        } else {
-//            Fragment selectedFrag = QueueDetailFragment.newInstance(name);
-//            getSupportFragmentManager().beginTransaction()
-//                    .addToBackStack(null)
-//                    .add(R.id.recycler_content_fragment, selectedFrag, QueueDetailFragment.TAG)
-//                    .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                    .commit();
-//        }
-    }
-
     @Override
     public void onProfileSelected(String title) {
 //        currentProfile = Profile();
     }
 
+    private void setProfile(Profile profile) {
+        ((ManagementApplication) getApplicationContext()).setProfile(profile);
+    }
+
     @Override
     public void onProfileCreated(String title, String host, String login, String password) {
-        ((ManagementApplication) getApplicationContext()).setProfile(new Profile(title, host, login, password));
+        Profile profile = new Profile(title, host, login, password);
+        setProfile(profile);
+        setDrawerProfile(profile);
     }
 
     @Override
     public void onProfileCreatedSave(String title, String host, String login, String password) {
-        ((ManagementApplication) getApplicationContext()).setProfile(new Profile(title, host, login, password).save(this));
+        Profile profile = new Profile(title, host, login, password).save(this);
+        setProfile(profile);
+        setDrawerProfile(profile);
+    }
+
+    @Override
+    public void onFilterSelected(String value, boolean regex, boolean saveForProfile) {
+
     }
 }

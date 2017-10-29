@@ -65,14 +65,6 @@ public class ProfileSelector extends DialogFragment {
 //            host.selectAll();
 //        }
 
-//        teamSelector = v.findViewById(R.id.new_game_select_first_team);
-//        teamSelector.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                ListDialog.newInstance(DialogTypes.SELECT_TEAM, teamType).show(getFragmentManager(), ListDialog.TAG);
-//            }
-//        });
-
         builder
                 .setPositiveButton(R.string.action_apply_save, new DialogInterface.OnClickListener() {
                     @Override
@@ -98,15 +90,4 @@ public class ProfileSelector extends DialogFragment {
                 });
         return builder.create();
     }
-
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            listener = (ChangeTeamListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString() + " must implement ChangeTeamListener");
-//        }
-//    }
-
 }

@@ -45,6 +45,7 @@ public class QueuesRecyclerFragment extends Fragment {
         setRecyclerViewLayoutManager();
         initAdapter();
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), R.drawable.list_divider));
         return rootView;
     }
 
