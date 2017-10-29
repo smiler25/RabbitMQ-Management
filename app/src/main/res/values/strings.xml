@@ -7,11 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
     <string name="pref_header_general">General</string>
-
     <string name="pref_title_social_recommendations" translatable="false">Enable social recommendations</string>
     <string name="pref_description_social_recommendations" translatable="false">Recommendations for people to contact
         based on your message history
@@ -77,12 +73,11 @@
     <string name="pref_title_ringtone" translatable="false">Ringtone</string>
     <string name="pref_ringtone_silent" translatable="false">Silent</string>
 
-    <string name="pref_title_vibrate" translatable="false">Vibrate</string>
     <string name="settings" translatable="false">Settings</string>
+    <string name="pref_title_vibrate" translatable="false">Vibrate</string>
     <string name="communicate" translatable="false">Communicate</string>
     <string name="connect" translatable="false">Connect</string>
-    <string name="title_activity_main2" translatable="false">Main2Activity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+
     <string name="overview">Overview</string>
     <string name="queues">Queues</string>
     <string name="total">Total</string>
@@ -91,4 +86,19 @@
     <string name="name">Name</string>
     <string name="title">Title</string>
     <string name="value">Value</string>
+    <string name="select_profile">Select profile</string>
+    <string name="edit_host">Host</string>
+    <string name="host">Host</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_apply_save">Apply and save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="profile">Profile</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="select">Select</string>
+    <string name="current_profile">Current profile:</string>
+    <string name="api_error_list">Get list error (%s)</string>
+    <string name="api_error_overview">Get overview error (%s)</string>
+    <string name="profile_null">Profile not specified</string>
+    <string name="update_in_progress">Updating data</string>
 </resources>

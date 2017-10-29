@@ -8,22 +8,25 @@
 
     <com.smiler.rabbitmanagement.views.OverviewPanel
         android:id="@+id/overview_ready"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_margin="2dp"
         />
 
     <com.smiler.rabbitmanagement.views.OverviewPanel
         android:id="@+id/overview_unacked"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_margin="2dp"
         />
 
     <com.smiler.rabbitmanagement.views.OverviewPanel
         android:id="@+id/overview_total"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_margin="2dp"
         />
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/profile"
+        android:gravity="center"
+        android:layout_margin="@dimen/edit_text_margin"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        />
+
+    <Button
+        android:id="@+id/new_game_select_first_team"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/select_profile"
+        />
+    <!--android:background="@color/floating_fragment_light"-->
+    <!--android:layout_margin="@dimen/edit_name_margin"-->
+
+    <EditText
+        android:id="@+id/edit_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="text"
+        android:hint="@string/title"
+        android:layout_margin="@dimen/edit_text_margin"
+        tools:ignore="LabelFor"
+        />
+    <EditText
+        android:id="@+id/edit_host"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="text"
+        android:hint="@string/host"
+        android:layout_margin="@dimen/edit_text_margin"
+        tools:ignore="LabelFor"
+        />
+    <EditText
+        android:id="@+id/edit_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="text"
+        android:hint="@string/login"
+        android:layout_margin="@dimen/edit_text_margin"
+        tools:ignore="LabelFor"
+        />
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textPassword"
+        android:hint="@string/password"
+        tools:ignore="LabelFor"
+        android:layout_margin="@dimen/edit_text_margin"
+        />
+
+</LinearLayout>

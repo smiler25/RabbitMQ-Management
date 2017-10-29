@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.api.OverviewApi;
 import com.smiler.rabbitmanagement.views.OverviewPanel;
@@ -15,6 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class OverviewFragment extends Fragment {
+    public static final String TAG = "RMQ-OverviewFragment";
+
     @BindView(R.id.overview_ready)
     OverviewPanel overviewPanelReady;
     @BindView(R.id.overview_unacked)
@@ -32,21 +35,25 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        OverviewApi.getInfo(getContext(), new OverviewApi.OverviewApiCallback() {
-            @Override
-            public void onResult(Overview result) {
-                overviewPanelReady.setTitle("Ready").setValue(result.getQueueTotals().getMessagesReady());
-                overviewPanelUnacked.setTitle("Unacked").setValue(result.getQueueTotals().getMessagesUnacked());
-                overviewPanelTotal.setTitle("Total").setValue(result.getQueueTotals().getMessages());
-            }
-
-            @Override
-            public void onError() {
-                Toast.makeText(getContext(), "Get overview error", Toast.LENGTH_LONG).show();
-            }
-        });
+        requestData();
         View root = inflater.inflate(R.layout.overview, container, false);
         ButterKnife.bind(this, root);
         return root;
+    }
+
+    public void requestData() {
+        OverviewApi.getInfo((ManagementApplication) getContext().getApplicationContext(), new OverviewApi.OverviewApiCallback() {
+            @Override
+            public void onResult(Overview result) {
+                overviewPanelReady.setTitle(getString(R.string.ready)).setValue(result.getQueueTotals().getMessagesReady());
+                overviewPanelUnacked.setTitle(getString(R.string.unacked)).setValue(result.getQueueTotals().getMessagesUnacked());
+                overviewPanelTotal.setTitle(getString(R.string.total)).setValue(result.getQueueTotals().getMessages());
+            }
+
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

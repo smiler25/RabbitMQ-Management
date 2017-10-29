@@ -1,14 +1,15 @@
 package com.smiler.rabbitmanagement.api;
 
-import android.content.Context;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smiler.rabbitmanagement.ManagementApplication;
+import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.VolleyClient;
 import com.smiler.rabbitmanagement.detail.QueueInfo;
+import com.smiler.rabbitmanagement.profiles.Profile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,19 +18,22 @@ public class QueuesListApi {
 
     public interface QueuesListApiCallback {
         void onResult(ArrayList<QueueInfo> result);
-        void onError();
+        void onError(String msg);
     }
 
-    public static void getList(Context context, final QueuesListApiCallback callback) {
-        String domain = "http://89.108.84.67:15672";
+    public static void getList(ManagementApplication context, final QueuesListApiCallback callback) {
+        Profile profile = context.getProfile();
+        if (profile == null) {
+            callback.onError(context.getString(R.string.profile_null));
+            return;
+        }
 
-        ApiRequest stringRequest = new ApiRequest(Request.Method.GET, domain + RequestPath.QUEUES_LIST, BaseApi.getHeaders(),
+        ApiRequest stringRequest = new ApiRequest(Request.Method.GET, profile.getHost() + RequestPath.QUEUES_LIST, BaseApi.getHeaders(profile.getAuthKey()),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         final ObjectMapper mapper = new ObjectMapper();
                         try {
-                            System.out.println("QueuesListApi result = " + mapper.readValue(response, new TypeReference<ArrayList<QueueInfo>>(){}));
                             callback.onResult((ArrayList<QueueInfo>) mapper.readValue(response, new TypeReference<ArrayList<QueueInfo>>(){}));
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -38,8 +42,7 @@ public class QueuesListApi {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("Error " + error);
-                callback.onError();
+                callback.onError(error.toString());
             }
         });
 

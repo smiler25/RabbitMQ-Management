@@ -8,10 +8,11 @@ import com.smiler.rabbitmanagement.overview.OverviewFragment;
 import com.smiler.rabbitmanagement.queues.QueuesRecyclerFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
     private MainActivity mainActivity;
+    public static final int POSITION_OVERVIEW = 0;
+    public static final int POSITION_QUEUES = 1;
 
-    public SectionsPagerAdapter(MainActivity mainActivity, FragmentManager fm) {
+    SectionsPagerAdapter(MainActivity mainActivity, FragmentManager fm) {
         super(fm);
         this.mainActivity = mainActivity;
     }
@@ -19,9 +20,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0:
+            case POSITION_OVERVIEW:
                 return OverviewFragment.newInstance();
-            case 1:
+            case POSITION_QUEUES:
                 return QueuesRecyclerFragment.newInstance();
         }
         return null;
@@ -35,11 +36,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
-            case 0:
+            case POSITION_OVERVIEW:
                 return mainActivity.getString(R.string.overview);
-            case 1:
+            case POSITION_QUEUES:
                 return mainActivity.getString(R.string.queues);
         }
         return null;
+    }
+
+    public String getFragmentTag(int viewPagerId, int fragmentPosition) {
+        return "android:switcher:" + viewPagerId + ":" + fragmentPosition;
     }
 }

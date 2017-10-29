@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.api.QueuesListApi;
 import com.smiler.rabbitmanagement.base.interfaces.QueueListListener;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class QueuesRecyclerFragment extends Fragment {
     public static final String TAG = "RMQ-QueuesRecyclerFragment";
+
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private QueuesRecyclerAdapter adapter;
@@ -30,7 +32,7 @@ public class QueuesRecyclerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        requestData();
     }
 
     @Override
@@ -68,8 +70,8 @@ public class QueuesRecyclerFragment extends Fragment {
         });
     }
 
-    private void initData() {
-        QueuesListApi.getList(getContext(), new QueuesListApi.QueuesListApiCallback() {
+    public void requestData() {
+        QueuesListApi.getList((ManagementApplication) getContext().getApplicationContext(), new QueuesListApi.QueuesListApiCallback() {
             @Override
             public void onResult(ArrayList<QueueInfo> result) {
                 if (result != null) {
@@ -78,8 +80,8 @@ public class QueuesRecyclerFragment extends Fragment {
             }
 
             @Override
-            public void onError() {
-
+            public void onError(String msg) {
+                Toast.makeText(getContext(), String.format(getString(R.string.api_error_list), msg), Toast.LENGTH_LONG).show();
             }
         });
     }

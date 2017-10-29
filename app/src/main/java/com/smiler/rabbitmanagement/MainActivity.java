@@ -7,6 +7,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,13 +20,22 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
+import com.smiler.rabbitmanagement.overview.OverviewFragment;
+import com.smiler.rabbitmanagement.profiles.Profile;
+import com.smiler.rabbitmanagement.profiles.ProfileSelector;
+import com.smiler.rabbitmanagement.queues.QueuesRecyclerFragment;
 import com.smiler.rabbitmanagement.settings.SettingsActivity;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        ProfileSelector.ProfileSelectorListener {
 
     private SectionsPagerAdapter sectionsPagerAdapter;
-    private ViewPager viewPager;
+    @BindView(R.id.container)
+    ViewPager viewPager;
     private QueueDetailFragment queueDetailFrag;
 
     @Override
@@ -33,9 +44,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
 
         sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        viewPager = findViewById(R.id.container);
         viewPager.setAdapter(sectionsPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -45,8 +56,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                updateData();
             }
         });
 
@@ -57,9 +69,15 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        headerView.findViewById(R.id.nav_select_profile).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProfileDialog();
+            }
+        });
 
-//        initFragments();
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -114,8 +132,31 @@ public class MainActivity extends AppCompatActivity
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
+    private void showProfileDialog() {
+        ProfileSelector.newInstance().setListener(this).show(getFragmentManager(), ProfileSelector.TAG);
+    }
 
-//    private void initFragments() {
+    private void updateData() {
+        FragmentManager fm = getSupportFragmentManager();
+        try {
+            Fragment overview = fm.findFragmentByTag(sectionsPagerAdapter.getFragmentTag(viewPager.getId(), SectionsPagerAdapter.POSITION_OVERVIEW));
+            if (overview != null) {
+                ((OverviewFragment) overview).requestData();
+            }
+        } catch (Exception e) {
+//            log
+        }
+        try {
+            Fragment list = fm.findFragmentByTag(sectionsPagerAdapter.getFragmentTag(viewPager.getId(), SectionsPagerAdapter.POSITION_QUEUES));
+            if (list != null) {
+                ((QueuesRecyclerFragment) list).requestData();
+            }
+        } catch (Exception e) {
+//            log
+        }
+    }
+
+    //    private void initFragments() {
 //        TeamsRecyclerFragment fragment = new TeamsRecyclerFragment();
 //        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //
@@ -156,5 +197,20 @@ public class MainActivity extends AppCompatActivity
 //                    .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //                    .commit();
 //        }
+    }
+
+    @Override
+    public void onProfileSelected(String title) {
+//        currentProfile = Profile();
+    }
+
+    @Override
+    public void onProfileCreated(String title, String host, String login, String password) {
+        ((ManagementApplication) getApplicationContext()).setProfile(new Profile(title, host, login, password));
+    }
+
+    @Override
+    public void onProfileCreatedSave(String title, String host, String login, String password) {
+        ((ManagementApplication) getApplicationContext()).setProfile(new Profile(title, host, login, password).save(this));
     }
 }
