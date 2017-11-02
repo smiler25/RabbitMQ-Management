@@ -28,21 +28,8 @@ public class OverviewPanel extends LinearLayout {
 
         LayoutInflater.from(context).inflate(R.layout.overview_panel, this);
         ButterKnife.bind(this);
-
-//        setBackgroundResource(R.drawable.background);
-//        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.OverviewPanel, 0, 0);
-//        try {
-//            mShowText = a.getBoolean(R.styleable.PieChart_showText, false);
-//            mTextPos = a.getInteger(R.styleable.PieChart_labelPosition, 0);
-//        } finally {
-//            a.recycle();
-//        }
-
         setOrientation(LinearLayout.HORIZONTAL);
-        setGravity(Gravity.CENTER_VERTICAL);
-
-        title.setText(R.string.title);
-        value.setText(R.string.value);
+        setGravity(Gravity.CENTER);
     }
 
     public OverviewPanel(Context context, @Nullable AttributeSet attrs, int defStyle) {

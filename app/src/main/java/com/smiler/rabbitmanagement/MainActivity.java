@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
-        if (profile.getTitle() != null || !profile.getTitle().equals("")) {
+        if (profile.getTitle() != null && !profile.getTitle().equals("")) {
             setDrawerProfile(profile);
         }
 

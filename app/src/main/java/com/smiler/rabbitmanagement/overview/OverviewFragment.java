@@ -5,12 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.api.OverviewApi;
+import com.smiler.rabbitmanagement.base.TableRowValue;
 import com.smiler.rabbitmanagement.views.OverviewPanel;
+import com.smiler.rabbitmanagement.views.ValuesTable;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +29,8 @@ public class OverviewFragment extends Fragment {
     OverviewPanel overviewPanelUnacked;
     @BindView(R.id.overview_total)
     OverviewPanel overviewPanelTotal;
+    @BindView(R.id.container_info)
+    LinearLayout infoContainer;
 
     public OverviewFragment() {
     }
@@ -45,9 +52,7 @@ public class OverviewFragment extends Fragment {
         OverviewApi.getInfo((ManagementApplication) getContext().getApplicationContext(), new OverviewApi.OverviewApiCallback() {
             @Override
             public void onResult(Overview result) {
-                overviewPanelReady.setTitle(getString(R.string.ready)).setValue(result.getQueueTotals().getMessagesReady());
-                overviewPanelUnacked.setTitle(getString(R.string.unacked)).setValue(result.getQueueTotals().getMessagesUnacked());
-                overviewPanelTotal.setTitle(getString(R.string.total)).setValue(result.getQueueTotals().getMessages());
+                setView(result);
             }
 
             @Override
@@ -55,5 +60,26 @@ public class OverviewFragment extends Fragment {
                 Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void setView(final Overview data) {
+        overviewPanelReady.setTitle(getString(R.string.ready)).setValue(data.getQueueTotals().getMessagesReady());
+        overviewPanelUnacked.setTitle(getString(R.string.unacked)).setValue(data.getQueueTotals().getMessagesUnacked());
+        overviewPanelTotal.setTitle(getString(R.string.total)).setValue(data.getQueueTotals().getMessages());
+        ArrayList<TableRowValue> globalCounts = new ArrayList<TableRowValue>() {{
+            add(new TableRowValue(getString(R.string.queues), data.getObjectTotals().getQueues()));
+            add(new TableRowValue(getString(R.string.connections), data.getObjectTotals().getConnections()));
+            add(new TableRowValue(getString(R.string.channels), data.getObjectTotals().getChannels()));
+            add(new TableRowValue(getString(R.string.exchanges), data.getObjectTotals().getExchanges()));
+            add(new TableRowValue(getString(R.string.consumers), data.getObjectTotals().getConsumers()));
+        }};
+        ArrayList<TableRowValue> info = new ArrayList<TableRowValue>() {{
+            add(new TableRowValue(getString(R.string.rabbit), data.getRabbitmqVersion()));
+            add(new TableRowValue(getString(R.string.cluster), data.getClusterName()));
+            add(new TableRowValue(getString(R.string.erlang), data.getErlangVersion()));
+        }};
+        infoContainer.removeAllViews();
+        infoContainer.addView(new ValuesTable(getContext(), globalCounts));
+        infoContainer.addView(new ValuesTable(getContext(), info));
     }
 }

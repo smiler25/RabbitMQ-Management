@@ -28,4 +28,7 @@
     <string name="filter_queues">Отфильтровать очереди</string>
     <string name="remember_credentials">Запомнить учетные данные</string>
     <string name="use_regex">Использовать рег. выражение</string>
+    <string name="cluster">Кластер</string>
+    <string name="navigation_drawer_open">Открыть боковую панель</string>
+    <string name="navigation_drawer_close">Закрыть боковую панель</string>
 </resources>

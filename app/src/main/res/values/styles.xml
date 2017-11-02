@@ -43,16 +43,34 @@
     <style name="overviewPanelStyle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:minHeight">75dp</item>
-        <item name="android:minWidth">125dp</item>
-        <item name="android:maxHeight">100dp</item>
-        <item name="android:maxWidth">200dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
         <!--<item name="android:textSize">@dimen/side_panel_row_font_size</item>-->
         <item name="android:textColor">@android:color/black</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">@drawable/overview_panel</item>
+    </style>
+
+    <style name="overviewPanelStyleBig" parent="overviewPanelStyle">
+        <item name="android:minHeight">75dp</item>
+        <item name="android:minWidth">125dp</item>
+        <item name="android:maxHeight">100dp</item>
+        <item name="android:maxWidth">200dp</item>
+    </style>
+
+    <style name="overviewPanelStyleSmall" parent="overviewPanelStyle">
+        <item name="android:minHeight">50dp</item>
+        <item name="android:minWidth">125dp</item>
+        <item name="android:maxHeight">75dp</item>
+        <item name="android:maxWidth">200dp</item>
+    </style>
+
+    <style name="tableRowChild">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textAlignment">textStart</item>
     </style>
 
 </resources>

@@ -1,7 +1,6 @@
-<!--<merge xmlns:android="http://schemas.android.com/apk/res/android">-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/overviewPanelStyle"
+    style="@style/overviewPanelStyleBig"
     >
 
     <TextView
@@ -10,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="asdf"
+        android:text="@string/title"
         />
     <TextView
         android:id="@+id/panel_value"
@@ -18,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="234"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text="@string/value"
         />
 </LinearLayout>
-<!--</merge>-->

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="start"
+    android:clickable="false"
+    android:longClickable="false"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/row_title"
+        style="@style/tableRowChild"
+        android:text="@string/name"
+        android:layout_weight="1.6"
+        />
+    <TextView
+        android:id="@+id/row_value"
+        style="@style/tableRowChild"
+        android:text="@string/value"
+        android:textAlignment="center"
+        android:layout_weight="1"
+        />
+</TableRow>
