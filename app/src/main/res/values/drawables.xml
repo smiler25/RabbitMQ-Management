@@ -5,4 +5,11 @@
     <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
     <item name="ic_menu_share" type="drawable">@android:drawable/ic_menu_share</item>
     <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
+
+    <item name="ic_menu_overview" type="drawable">@android:drawable/ic_menu_agenda</item>
+    <item name="ic_menu_queues" type="drawable">@android:drawable/ic_menu_agenda</item>
+    <item name="ic_menu_channels" type="drawable">@android:drawable/ic_menu_agenda</item>
+    <item name="ic_menu_connections" type="drawable">@android:drawable/ic_menu_agenda</item>
+    <item name="ic_menu_exchanges" type="drawable">@android:drawable/ic_menu_agenda</item>
+    <item name="ic_menu_admin" type="drawable">@android:drawable/ic_menu_agenda</item>
 </resources>

@@ -5,7 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/queues_list_header"/>
+    <ViewStub
+        android:id="@+id/list_header"
+        android:inflatedId="@+id/list_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

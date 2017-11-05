@@ -18,7 +18,7 @@
     <string name="login">Логин</string>
     <string name="select">Выбрать</string>
     <string name="current_profile">Профиль: %s</string>
-    <string name="api_error_list">Ошибка при получении списка (%s)</string>
+    <string name="api_error_queues">Ошибка при получении списка очередей (%s)</string>
     <string name="api_error_overview">Ошибка получения общей информации (%s)</string>
     <string name="profile_null">Не выбран профиль</string>
     <string name="update_in_progress">Данные обновляются</string>
@@ -31,4 +31,7 @@
     <string name="cluster">Кластер</string>
     <string name="navigation_drawer_open">Открыть боковую панель</string>
     <string name="navigation_drawer_close">Закрыть боковую панель</string>
+    <string name="api_error_connections">Ошибка при получении соединений (%s)</string>
+    <string name="api_error_channels">Ошибка при получении списка каналов (%s)</string>
+    <string name="state">Статус</string>
 </resources>

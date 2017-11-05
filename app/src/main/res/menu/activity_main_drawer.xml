@@ -3,9 +3,32 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/connect"/>
+            android:id="@+id/nav_overview"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/overview"/>
+        <item
+            android:id="@+id/nav_queues"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/overview"/>
+        <item
+            android:id="@+id/nav_connections"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/connections"/>
+        <item
+            android:id="@+id/nav_channels"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/channels"/>
+        <item
+            android:id="@+id/nav_exchanges"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/exchanges"/>
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/overview"/>
+    </group>
+
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"

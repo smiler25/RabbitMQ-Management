@@ -13,19 +13,24 @@
         android:text="@string/name"
         />
     <TextView
-        android:id="@+id/queue_ready"
+        android:id="@+id/ch_vhost"
         style="@style/listRowItem"
-        android:text="@string/ready"
+        android:text="@string/vhost"
         />
     <TextView
-        android:id="@+id/queue_unacked"
+        android:id="@+id/ch_user"
         style="@style/listRowItem"
-        android:text="@string/unacked"
+        android:text="@string/user"
         />
     <TextView
-        android:id="@+id/queue_total"
+        android:id="@+id/ch_state"
         style="@style/listRowItem"
-        android:text="@string/total"
+        android:text="@string/state"
+        />
+    <TextView
+        android:id="@+id/ch_prefetch"
+        style="@style/listRowItem"
+        android:text="@string/prefetch"
         />
 
 </LinearLayout>

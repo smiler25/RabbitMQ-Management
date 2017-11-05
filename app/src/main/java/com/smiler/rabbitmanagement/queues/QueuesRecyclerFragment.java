@@ -1,28 +1,20 @@
 package com.smiler.rabbitmanagement.queues;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
-import com.smiler.rabbitmanagement.api.QueuesListApi;
-import com.smiler.rabbitmanagement.base.interfaces.QueueListListener;
+import com.smiler.rabbitmanagement.base.BaseRecyclerFragment;
+import com.smiler.rabbitmanagement.base.api.BaseApi;
+import com.smiler.rabbitmanagement.base.interfaces.BaseListListener;
 import com.smiler.rabbitmanagement.detail.QueueInfo;
 
 import java.util.ArrayList;
 
 
-public class QueuesRecyclerFragment extends Fragment {
+public class QueuesRecyclerFragment extends BaseRecyclerFragment {
     public static final String TAG = "RMQ-QueuesRecyclerFragment";
 
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private QueuesRecyclerAdapter adapter;
 
     public static QueuesRecyclerFragment newInstance() {
@@ -30,49 +22,25 @@ public class QueuesRecyclerFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestData();
+    public int getHeaderRes() {
+        return R.layout.queues_list_header;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.queues_list, container, false);
-        rootView.setTag(TAG);
-        recyclerView = rootView.findViewById(R.id.recycler_view);
-        layoutManager = new LinearLayoutManager(getActivity());
-        setRecyclerViewLayoutManager();
-        initAdapter();
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), R.drawable.list_divider));
-        return rootView;
-    }
-
-    public void setRecyclerViewLayoutManager() {
-        int scrollPosition = 0;
-        if (recyclerView.getLayoutManager() != null) {
-            scrollPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
-                    .findFirstCompletelyVisibleItemPosition();
-        }
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.scrollToPosition(scrollPosition);
-    }
-
-    private void initAdapter() {
+    public QueuesRecyclerAdapter initAdapter() {
         adapter = new QueuesRecyclerAdapter();
-        adapter.setListener(new QueueListListener() {
+        adapter.setListener(new BaseListListener<QueueInfo>() {
             @Override
             public void onListElementClick(QueueInfo queueInfo) {
                 System.out.println("queueInfo = " + queueInfo);
                 Toast.makeText(getContext(), queueInfo.toString(), Toast.LENGTH_LONG).show();
             }
         });
+        return adapter;
     }
 
-    public void requestData() {
-        QueuesListApi.getList((ManagementApplication) getContext().getApplicationContext(), new QueuesListApi.QueuesListApiCallback() {
+    @Override
+    public void updateData() {
+        QueuesListApi.getList((ManagementApplication) getContext().getApplicationContext(), new BaseApi.ApiCallback<ArrayList<QueueInfo>>() {
             @Override
             public void onResult(ArrayList<QueueInfo> result) {
                 if (result != null) {
@@ -82,7 +50,7 @@ public class QueuesRecyclerFragment extends Fragment {
 
             @Override
             public void onError(String msg) {
-                Toast.makeText(getContext(), String.format(getString(R.string.api_error_list), msg), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), String.format(getString(R.string.api_error_queues), msg), Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.smiler.rabbitmanagement.queues;
+package com.smiler.rabbitmanagement.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,7 @@ import android.view.View;
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable divider;
 
-    DividerItemDecoration(Context context, int resId) {
+    public DividerItemDecoration(Context context, int resId) {
         divider = ContextCompat.getDrawable(context, resId);
     }
 

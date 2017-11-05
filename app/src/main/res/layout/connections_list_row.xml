@@ -2,25 +2,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/listRow"
     >
-
     <TextView
-        android:id="@+id/queue_name"
+        android:id="@+id/con_name"
         style="@style/listRowItemFirst"
         />
     <TextView
-        android:id="@+id/queue_ready"
+        android:id="@+id/con_vhost"
         style="@style/listRowItem"
-        android:layout_weight="1"
         />
     <TextView
-        android:id="@+id/queue_unacked"
+        android:id="@+id/con_user"
         style="@style/listRowItem"
-        android:layout_weight="1"
         />
     <TextView
-        android:id="@+id/queue_total"
+        android:id="@+id/con_state"
         style="@style/listRowItem"
-        android:layout_weight="1"
         />
-
+    <TextView
+        android:id="@+id/con_channels"
+        style="@style/listRowItem"
+        />
 </LinearLayout>

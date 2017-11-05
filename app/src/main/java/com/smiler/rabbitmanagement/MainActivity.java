@@ -153,10 +153,18 @@ public class MainActivity extends AppCompatActivity implements
 
     private void updateData() {
         FragmentManager fm = getSupportFragmentManager();
+//        try {
+//            Fragment fragment = fm.findFragmentById(R.id.container_common);
+//            if (fragment != null) {
+//                ((UpdatableFragment) fragment).updateData();
+//            }
+//        } catch (Exception e) {
+////            log
+//        }
         try {
             Fragment overview = fm.findFragmentByTag(sectionsPagerAdapter.getFragmentTag(viewPager.getId(), SectionsPagerAdapter.POSITION_OVERVIEW));
             if (overview != null) {
-                ((OverviewFragment) overview).requestData();
+                ((OverviewFragment) overview).updateData();
             }
         } catch (Exception e) {
 //            log
@@ -164,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements
         try {
             Fragment list = fm.findFragmentByTag(sectionsPagerAdapter.getFragmentTag(viewPager.getId(), SectionsPagerAdapter.POSITION_QUEUES));
             if (list != null) {
-                ((QueuesRecyclerFragment) list).requestData();
+                ((QueuesRecyclerFragment) list).updateData();
             }
         } catch (Exception e) {
 //            log

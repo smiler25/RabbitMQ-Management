@@ -75,8 +75,10 @@
     <string name="login">Login</string>
     <string name="select">Select</string>
     <string name="current_profile">Current profile: %s</string>
-    <string name="api_error_list">Get list error (%s)</string>
+    <string name="api_error_queues">Get queues error (%s)</string>
     <string name="api_error_overview">Get overview error (%s)</string>
+    <string name="api_error_connections">Get connections error (%s)</string>
+    <string name="api_error_channels">Get channels error (%s)</string>
     <string name="profile_null">Profile not specified</string>
     <string name="update_in_progress">Updating data</string>
     <string name="remember">Remember</string>
@@ -88,4 +90,8 @@
     <string name="rabbit" translatable="false">RabbitMQ</string>
     <string name="cluster">Cluster</string>
     <string name="erlang" translatable="false">Erlang</string>
+    <string name="vhost" translatable="false">VHost</string>
+    <string name="user" translatable="false">User</string>
+    <string name="state">State</string>
+    <string name="prefetch" translatable="false">Prefetch count</string>
 </resources>

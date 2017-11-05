@@ -1,4 +1,4 @@
-package com.smiler.rabbitmanagement.api;
+package com.smiler.rabbitmanagement.base.api;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;

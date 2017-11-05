@@ -8,24 +8,29 @@
     >
 
     <TextView
-        android:id="@+id/queue_name"
+        android:id="@+id/con_name"
         style="@style/listRowItemFirst"
         android:text="@string/name"
         />
     <TextView
-        android:id="@+id/queue_ready"
+        android:id="@+id/con_vhost"
         style="@style/listRowItem"
-        android:text="@string/ready"
+        android:text="@string/vhost"
         />
     <TextView
-        android:id="@+id/queue_unacked"
+        android:id="@+id/con_user"
         style="@style/listRowItem"
-        android:text="@string/unacked"
+        android:text="@string/user"
         />
     <TextView
-        android:id="@+id/queue_total"
+        android:id="@+id/con_state"
         style="@style/listRowItem"
-        android:text="@string/total"
+        android:text="@string/state"
+        />
+    <TextView
+        android:id="@+id/con_channels"
+        style="@style/listRowItem"
+        android:text="@string/channels"
         />
 
 </LinearLayout>

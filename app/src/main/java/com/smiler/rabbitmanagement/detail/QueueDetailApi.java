@@ -1,11 +1,10 @@
-package com.smiler.rabbitmanagement.api;
+package com.smiler.rabbitmanagement.detail;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smiler.rabbitmanagement.detail.QueueInfo;
 
 import java.io.IOException;
 
-import static com.smiler.rabbitmanagement.api.RequestPath.DEFAULT_VHOST;
+import static com.smiler.rabbitmanagement.base.api.RequestPath.DEFAULT_VHOST;
 
 public class QueueDetailApi {
 

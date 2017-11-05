@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.smiler.rabbitmanagement.R;
-import com.smiler.rabbitmanagement.api.QueueDetailApi;
 
 
 public class QueueDetailFragment extends Fragment {
@@ -33,7 +32,7 @@ public class QueueDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.queues_list, container, false);
+        View rootView = inflater.inflate(R.layout.base_list, container, false);
         rootView.setTag(TAG);
         return rootView;
     }

@@ -10,8 +10,9 @@ import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
-import com.smiler.rabbitmanagement.api.OverviewApi;
+import com.smiler.rabbitmanagement.base.api.BaseApi;
 import com.smiler.rabbitmanagement.base.TableRowValue;
+import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitmanagement.views.OverviewPanel;
 import com.smiler.rabbitmanagement.views.ValuesTable;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OverviewFragment extends Fragment {
+public class OverviewFragment extends Fragment implements UpdatableFragment {
     public static final String TAG = "RMQ-OverviewFragment";
 
     @BindView(R.id.overview_ready)
@@ -42,24 +43,10 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        requestData();
+        updateData();
         View root = inflater.inflate(R.layout.overview, container, false);
         ButterKnife.bind(this, root);
         return root;
-    }
-
-    public void requestData() {
-        OverviewApi.getInfo((ManagementApplication) getContext().getApplicationContext(), new OverviewApi.OverviewApiCallback() {
-            @Override
-            public void onResult(Overview result) {
-                setView(result);
-            }
-
-            @Override
-            public void onError(String msg) {
-                Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     private void setView(final Overview data) {
@@ -75,11 +62,26 @@ public class OverviewFragment extends Fragment {
         }};
         ArrayList<TableRowValue> info = new ArrayList<TableRowValue>() {{
             add(new TableRowValue(getString(R.string.rabbit), data.getRabbitmqVersion()));
-            add(new TableRowValue(getString(R.string.cluster), data.getClusterName()));
             add(new TableRowValue(getString(R.string.erlang), data.getErlangVersion()));
+            add(new TableRowValue(getString(R.string.cluster), data.getClusterName()));
         }};
         infoContainer.removeAllViews();
         infoContainer.addView(new ValuesTable(getContext(), globalCounts));
         infoContainer.addView(new ValuesTable(getContext(), info));
+    }
+
+    @Override
+    public void updateData() {
+        OverviewApi.getInfo((ManagementApplication) getContext().getApplicationContext(), new BaseApi.ApiCallback<Overview>() {
+            @Override
+            public void onResult(Overview result) {
+                setView(result);
+            }
+
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
