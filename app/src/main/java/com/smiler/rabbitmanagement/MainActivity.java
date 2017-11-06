@@ -6,11 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.smiler.rabbitmanagement.channels.ChannelsRecyclerFragment;
+import com.smiler.rabbitmanagement.connections.ConnectionsRecyclerFragment;
 import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
 import com.smiler.rabbitmanagement.overview.OverviewFragment;
 import com.smiler.rabbitmanagement.profiles.Profile;
@@ -35,12 +36,11 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         ProfileSelector.ProfileSelectorListener, FilterDialog.FilterDialogListener {
 
-    private SectionsPagerAdapter sectionsPagerAdapter;
-    @BindView(R.id.container)
-    ViewPager viewPager;
-
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     TextView drawerProfileTitle;
 
@@ -50,18 +50,11 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Profile profile = Profile.getProfile(this);
-        setProfile(profile);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         ButterKnife.bind(this);
 
-        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(sectionsPagerAdapter);
-
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        Profile profile = Profile.getProfile(this);
+        setProfile(profile);
+        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         navigationView.setNavigationItemSelectedListener(this);
+        showFragment(PageType.OVERVIEW);
     }
 
     private void setDrawerProfile(Profile profile) {
@@ -128,12 +122,65 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    private void showFragment(PageType type) {
+        Fragment fragment = null;
+        String tag = "";
+        int titleRes = R.string.app_name;
+        switch (type) {
+            case OVERVIEW:
+                fragment = OverviewFragment.newInstance();
+                tag = OverviewFragment.TAG;
+                titleRes = R.string.overview;
+                break;
+            case QUEUES:
+                fragment = QueuesRecyclerFragment.newInstance();
+                tag = QueuesRecyclerFragment.TAG;
+                titleRes = R.string.queues;
+                break;
+            case CONNECTIONS:
+                fragment = ConnectionsRecyclerFragment.newInstance();
+                tag = ConnectionsRecyclerFragment.TAG;
+                titleRes = R.string.connections;
+                break;
+            case CHANNELS:
+                fragment = ChannelsRecyclerFragment.newInstance();
+                tag = ChannelsRecyclerFragment.TAG;
+                titleRes = R.string.channels;
+                break;
+
+        }
+        fragment.setRetainInstance(true);
+        // fragment.setListener(this);
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.fragment_layout_place, fragment, tag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+        toolbar.setTitle(titleRes);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        PageType type = null;
         switch (item.getItemId()) {
+            case R.id.nav_overview:
+                type = PageType.OVERVIEW;
+                break;
+            case R.id.nav_queues:
+                type = PageType.QUEUES;
+                break;
+            case R.id.nav_connections:
+                type = PageType.CONNECTIONS;
+                break;
+            case R.id.nav_channels:
+                type = PageType.CHANNELS;
+                break;
             case R.id.nav_settings:
                 runSettingsActivity();
                 break;
+        }
+        if (type != null) {
+            showFragment(type);
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -161,22 +208,6 @@ public class MainActivity extends AppCompatActivity implements
 //        } catch (Exception e) {
 ////            log
 //        }
-        try {
-            Fragment overview = fm.findFragmentByTag(sectionsPagerAdapter.getFragmentTag(viewPager.getId(), SectionsPagerAdapter.POSITION_OVERVIEW));
-            if (overview != null) {
-                ((OverviewFragment) overview).updateData();
-            }
-        } catch (Exception e) {
-//            log
-        }
-        try {
-            Fragment list = fm.findFragmentByTag(sectionsPagerAdapter.getFragmentTag(viewPager.getId(), SectionsPagerAdapter.POSITION_QUEUES));
-            if (list != null) {
-                ((QueuesRecyclerFragment) list).updateData();
-            }
-        } catch (Exception e) {
-//            log
-        }
     }
 
 //    @Override

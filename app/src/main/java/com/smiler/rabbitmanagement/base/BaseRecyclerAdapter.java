@@ -66,7 +66,7 @@ public abstract class BaseRecyclerAdapter<T, VH extends BaseRecyclerAdapter.View
                 @Override
                 public void onClick(View v) {
                     if (callback != null) {
-                        callback.onListElementClick(item);
+                        callback.onListElementClick(getItem());
                     }
                 }
             });
