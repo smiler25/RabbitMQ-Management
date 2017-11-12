@@ -1,5 +1,6 @@
 package com.smiler.rabbitmanagement;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,15 +20,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitmanagement.channels.ChannelsRecyclerFragment;
 import com.smiler.rabbitmanagement.connections.ConnectionsRecyclerFragment;
-import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
+import com.smiler.rabbitmanagement.db.Profile;
 import com.smiler.rabbitmanagement.overview.OverviewFragment;
-import com.smiler.rabbitmanagement.profiles.Profile;
+import com.smiler.rabbitmanagement.profiles.ActiveProfile;
 import com.smiler.rabbitmanagement.profiles.ProfileSelector;
-import com.smiler.rabbitmanagement.queues.FilterDialog;
 import com.smiler.rabbitmanagement.queues.QueuesRecyclerFragment;
+import com.smiler.rabbitmanagement.queues.filter.FilterDialog;
 import com.smiler.rabbitmanagement.settings.SettingsActivity;
+import com.smiler.rabbitmanagement.views.AppRepository;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,8 +48,7 @@ public class MainActivity extends AppCompatActivity implements
     Toolbar toolbar;
 
     TextView drawerProfileTitle;
-
-    private QueueDetailFragment queueDetailFrag;
+    PageType currentPageType = PageType.OVERVIEW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +56,15 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Profile profile = Profile.getProfile(this);
+        ActiveProfile profile = ActiveProfile.getProfile(this);
         setProfile(profile);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                updateData();
-            }
+        fab.setOnClickListener(view -> {
+            Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            updateData();
         });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -73,22 +74,19 @@ public class MainActivity extends AppCompatActivity implements
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        headerView.findViewById(R.id.nav_select_profile).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showProfileDialog();
-            }
-        });
+        headerView.findViewById(R.id.nav_select_profile).setOnClickListener(v -> showProfileDialog());
         drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
         if (profile.getTitle() != null && !profile.getTitle().equals("")) {
             setDrawerProfile(profile);
         }
 
         navigationView.setNavigationItemSelectedListener(this);
-        showFragment(PageType.OVERVIEW);
+        showFragment(currentPageType);
+        createTestProfile();
+        getAllDbProfiles();
     }
 
-    private void setDrawerProfile(Profile profile) {
+    private void setDrawerProfile(ActiveProfile profile) {
         drawerProfileTitle.setText(String.format(getString(R.string.current_profile), profile.getTitle()));
     }
 
@@ -104,7 +102,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        switch (currentPageType) {
+            case QUEUES:
+                getMenuInflater().inflate(R.menu.queues, menu);
+                break;
+            default:
+                getMenuInflater().inflate(R.menu.main, menu);
+                break;
+        }
         return true;
     }
 
@@ -157,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
         toolbar.setTitle(titleRes);
+        currentPageType = type;
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -200,14 +207,36 @@ public class MainActivity extends AppCompatActivity implements
 
     private void updateData() {
         FragmentManager fm = getSupportFragmentManager();
-//        try {
-//            Fragment fragment = fm.findFragmentById(R.id.container_common);
-//            if (fragment != null) {
-//                ((UpdatableFragment) fragment).updateData();
-//            }
-//        } catch (Exception e) {
-////            log
+        try {
+            Fragment fragment = fm.findFragmentById(R.id.fragment_layout_place);
+            if (fragment != null) {
+                ((UpdatableFragment) fragment).updateData();
+            }
+        } catch (Exception e) {
+//            log
+        }
+    }
+
+    private void getAllDbProfiles() {
+        LiveData<List<Profile>> profiles = AppRepository.getInstance(getApplicationContext()).getAllProfiles();
+        profiles.observe(this, System.out::println);
+//        profiles.observe(this, (profile) -> {
+//            System.out.println(profile);
+//        });
+//        for (Profile profile : profiles) {
+//            System.out.println(profile);
 //        }
+    }
+
+    private void createTestProfile() {
+        Profile profile = new Profile()
+                .setAuthKey("test")
+                .setHost(":test host:")
+                .setLogin("guest")
+                .setTitle("FirstProfile"
+                ).setPassword("TEST");
+//        new InsertTask(getApplicationContext()).doInBackground(profile);
+        AppRepository.getInstance(getApplicationContext()).insertProfile(profile);
     }
 
 //    @Override
@@ -222,23 +251,23 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onProfileSelected(String title) {
-//        currentProfile = Profile();
+//        currentProfile = ActiveProfile();
     }
 
-    private void setProfile(Profile profile) {
+    private void setProfile(ActiveProfile profile) {
         ((ManagementApplication) getApplicationContext()).setProfile(profile);
     }
 
     @Override
     public void onProfileCreated(String title, String host, String login, String password) {
-        Profile profile = new Profile(title, host, login, password);
+        ActiveProfile profile = new ActiveProfile(title, host, login, password);
         setProfile(profile);
         setDrawerProfile(profile);
     }
 
     @Override
     public void onProfileCreatedSave(String title, String host, String login, String password) {
-        Profile profile = new Profile(title, host, login, password).save(this);
+        ActiveProfile profile = new ActiveProfile(title, host, login, password).save(this);
         setProfile(profile);
         setDrawerProfile(profile);
     }

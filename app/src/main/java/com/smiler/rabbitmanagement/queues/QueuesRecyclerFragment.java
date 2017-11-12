@@ -1,18 +1,17 @@
 package com.smiler.rabbitmanagement.queues;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.widget.Toast;
 
-import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.BaseRecyclerFragment;
-import com.smiler.rabbitmanagement.base.api.BaseApi;
-import com.smiler.rabbitmanagement.base.interfaces.BaseListListener;
 import com.smiler.rabbitmanagement.detail.QueueInfo;
 
 import java.util.ArrayList;
 
 
-public class QueuesRecyclerFragment extends BaseRecyclerFragment {
+public class QueuesRecyclerFragment extends BaseRecyclerFragment<QueuesListViewModel> {
     public static final String TAG = "RMQ-QueuesRecyclerFragment";
 
     private QueuesRecyclerAdapter adapter;
@@ -26,32 +25,27 @@ public class QueuesRecyclerFragment extends BaseRecyclerFragment {
         return R.layout.queues_list_header;
     }
 
-    public QueuesRecyclerAdapter initAdapter() {
-        adapter = new QueuesRecyclerAdapter();
-        adapter.setListener(new BaseListListener<QueueInfo>() {
-            @Override
-            public void onListElementClick(QueueInfo queueInfo) {
-                System.out.println("queueInfo = " + queueInfo);
-                Toast.makeText(getContext(), queueInfo.toString(), Toast.LENGTH_LONG).show();
+    @Override
+    public void initModel() {
+        dataModel = ViewModelProviders.of(getActivity()).get(QueuesListViewModel.class);
+        final Observer<ArrayList<QueueInfo>> observer = data -> {
+            if (data != null) {
+                adapter.updateData(data);
             }
-        });
-        return adapter;
+        };
+        dataModel.getModel().observe(this, observer);
     }
 
-    @Override
-    public void updateData() {
-        QueuesListApi.getList((ManagementApplication) getContext().getApplicationContext(), new BaseApi.ApiCallback<ArrayList<QueueInfo>>() {
-            @Override
-            public void onResult(ArrayList<QueueInfo> result) {
-                if (result != null) {
-                    adapter.updateData(result);
-                }
-            }
-
-            @Override
-            public void onError(String msg) {
-                Toast.makeText(getContext(), String.format(getString(R.string.api_error_queues), msg), Toast.LENGTH_LONG).show();
-            }
-        });
+    public QueuesRecyclerAdapter initAdapter() {
+        adapter = new QueuesRecyclerAdapter();
+        adapter.setListener(obj -> Toast.makeText(getContext(), obj.toString(), Toast.LENGTH_LONG).show());
+//        adapter.setListener(new BaseListListener<QueueInfo>() {
+//            @Override
+//            public void onListElementClick(QueueInfo queueInfo) {
+//                System.out.println("queueInfo = " + queueInfo);
+//                Toast.makeText(getContext(), queueInfo.toString(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+        return adapter;
     }
 }

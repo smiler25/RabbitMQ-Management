@@ -1,17 +1,16 @@
 package com.smiler.rabbitmanagement.channels;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.widget.Toast;
 
-import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.BaseRecyclerFragment;
-import com.smiler.rabbitmanagement.base.api.BaseApi;
-import com.smiler.rabbitmanagement.base.interfaces.BaseListListener;
 
 import java.util.ArrayList;
 
 
-public class ChannelsRecyclerFragment extends BaseRecyclerFragment {
+public class ChannelsRecyclerFragment extends BaseRecyclerFragment<ChannelsViewModel> {
     public static final String TAG = "RMQ-ChannelsRecyclerFragment";
 
     private ChannelsRecyclerAdapter adapter;
@@ -25,32 +24,21 @@ public class ChannelsRecyclerFragment extends BaseRecyclerFragment {
         return R.layout.channels_list_header;
     }
 
-    public ChannelsRecyclerAdapter initAdapter() {
-        adapter = new ChannelsRecyclerAdapter();
-        adapter.setListener(new BaseListListener<Channel>() {
-            @Override
-            public void onListElementClick(Channel connection) {
-                System.out.println("connection = " + connection);
-                Toast.makeText(getContext(), connection.toString(), Toast.LENGTH_LONG).show();
+    @Override
+    public void initModel() {
+        dataModel = ViewModelProviders.of(getActivity()).get(ChannelsViewModel.class);
+        final Observer<ArrayList<Channel>> observer = data -> {
+            if (data != null) {
+                adapter.updateData(data);
             }
-        });
-        return adapter;
+        };
+        dataModel.getModel().observe(this, observer);
+
     }
 
-    @Override
-    public void updateData() {
-        ChannelsApi.getList((ManagementApplication) getContext().getApplicationContext(), new BaseApi.ApiCallback<ArrayList<Channel>>() {
-            @Override
-            public void onResult(ArrayList<Channel> result) {
-                if (result != null) {
-                    adapter.updateData(result);
-                }
-            }
-
-            @Override
-            public void onError(String msg) {
-                Toast.makeText(getContext(), String.format(getString(R.string.api_error_queues), msg), Toast.LENGTH_LONG).show();
-            }
-        });
+    public ChannelsRecyclerAdapter initAdapter() {
+        adapter = new ChannelsRecyclerAdapter();
+        adapter.setListener(obj -> Toast.makeText(getContext(), obj.toString(), Toast.LENGTH_LONG).show());
+        return adapter;
     }
 }

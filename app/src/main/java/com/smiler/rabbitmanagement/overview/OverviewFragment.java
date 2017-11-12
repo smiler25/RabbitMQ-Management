@@ -1,16 +1,16 @@
 package com.smiler.rabbitmanagement.overview;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
-import com.smiler.rabbitmanagement.base.api.BaseApi;
 import com.smiler.rabbitmanagement.base.TableRowValue;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitmanagement.views.OverviewPanel;
@@ -33,6 +33,8 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
     @BindView(R.id.container_info)
     LinearLayout infoContainer;
 
+    private OverviewViewModel dataModel;
+
     public OverviewFragment() {
     }
 
@@ -43,16 +45,27 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        updateData();
         View root = inflater.inflate(R.layout.overview, container, false);
         ButterKnife.bind(this, root);
+        overviewPanelReady.setTitle(getString(R.string.ready));
+        overviewPanelUnacked.setTitle(getString(R.string.unacked));
+        overviewPanelTotal.setTitle(getString(R.string.total));
+        dataModel = ViewModelProviders.of(this).get(OverviewViewModel.class);
+
+        final Observer<Overview> observer = data -> {
+            if (data != null) {
+                setView(data);
+            }
+        };
+        dataModel.getModel().observe(this, observer);
+        updateData();
         return root;
     }
 
     private void setView(final Overview data) {
-        overviewPanelReady.setTitle(getString(R.string.ready)).setValue(data.getQueueTotals().getMessagesReady());
-        overviewPanelUnacked.setTitle(getString(R.string.unacked)).setValue(data.getQueueTotals().getMessagesUnacked());
-        overviewPanelTotal.setTitle(getString(R.string.total)).setValue(data.getQueueTotals().getMessages());
+        overviewPanelReady.setValue(data.getQueueTotals().getMessagesReady());
+        overviewPanelUnacked.setValue(data.getQueueTotals().getMessagesUnacked());
+        overviewPanelTotal.setValue(data.getQueueTotals().getMessages());
         ArrayList<TableRowValue> globalCounts = new ArrayList<TableRowValue>() {{
             add(new TableRowValue(getString(R.string.queues), data.getObjectTotals().getQueues()));
             add(new TableRowValue(getString(R.string.connections), data.getObjectTotals().getConnections()));
@@ -72,16 +85,8 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
 
     @Override
     public void updateData() {
-        OverviewApi.getInfo((ManagementApplication) getContext().getApplicationContext(), new BaseApi.ApiCallback<Overview>() {
-            @Override
-            public void onResult(Overview result) {
-                setView(result);
-            }
-
-            @Override
-            public void onError(String msg) {
-                Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
-            }
-        });
+        if (dataModel != null) {
+            dataModel.loadData((ManagementApplication) getContext().getApplicationContext());
+        }
     }
 }

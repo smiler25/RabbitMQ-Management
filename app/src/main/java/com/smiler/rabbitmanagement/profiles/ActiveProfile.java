@@ -8,7 +8,7 @@ import android.util.Base64;
 import lombok.Data;
 
 @Data
-public class Profile {
+public class ActiveProfile {
     private static final String STATE_TITLE = "TITLE";
     private static final String STATE_HOST = "HOST";
     private static final String STATE_KEY = "KEY";
@@ -23,13 +23,13 @@ public class Profile {
         return Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
     }
 
-    private Profile(String title, String host, String authKey) {
+    private ActiveProfile(String title, String host, String authKey) {
         this.title = title;
         this.host = host;
         this.authKey = authKey;
     }
 
-    public Profile(String title, String host, String login, String password) {
+    public ActiveProfile(String title, String host, String login, String password) {
         if (host.endsWith("/")) {
             host = host.substring(0, host.length() - 1);
         }
@@ -40,7 +40,7 @@ public class Profile {
         this.authKey = generateAuthKey(login, password);
     }
 
-    public Profile save(Activity activity) {
+    public ActiveProfile save(Activity activity) {
         SharedPreferences statePref = activity.getPreferences(Context.MODE_PRIVATE);
         statePref.edit()
                 .putString(STATE_TITLE, title)
@@ -50,9 +50,9 @@ public class Profile {
         return this;
     }
 
-    public static Profile getProfile(Activity activity) {
+    public static ActiveProfile getProfile(Activity activity) {
         SharedPreferences statePref = activity.getPreferences(Context.MODE_PRIVATE);
-        return new Profile(
+        return new ActiveProfile(
                 statePref.getString(STATE_TITLE, null),
                 statePref.getString(STATE_HOST, null),
                 statePref.getString(STATE_KEY, null)

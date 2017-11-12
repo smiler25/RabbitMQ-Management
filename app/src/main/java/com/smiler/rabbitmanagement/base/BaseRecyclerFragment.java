@@ -9,20 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 
+import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitmanagement.views.DividerItemDecoration;
 
 
-public abstract class BaseRecyclerFragment extends Fragment implements UpdatableFragment {
+public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Fragment implements UpdatableFragment {
     public static final String TAG = "RMQ-BaseRecyclerFragment";
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    protected T dataModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initModel();
         updateData();
     }
 
@@ -54,8 +57,15 @@ public abstract class BaseRecyclerFragment extends Fragment implements Updatable
     }
 
     abstract public int getHeaderRes();
+
+    abstract public void initModel();
+
     abstract public BaseRecyclerAdapter initAdapter();
 
     @Override
-    abstract public void updateData();
+    public void updateData() {
+        if (dataModel != null) {
+            dataModel.loadData((ManagementApplication) getContext().getApplicationContext());
+        }
+    }
 }

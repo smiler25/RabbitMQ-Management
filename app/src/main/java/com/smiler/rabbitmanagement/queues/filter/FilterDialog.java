@@ -1,4 +1,4 @@
-package com.smiler.rabbitmanagement.queues;
+package com.smiler.rabbitmanagement.queues.filter;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
