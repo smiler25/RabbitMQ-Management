@@ -1,4 +1,4 @@
-package com.smiler.rabbitmanagement.db;
+package com.smiler.rabbitmanagement.profiles;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -14,6 +14,9 @@ public interface ProfileDao {
 
     @Query("SELECT * FROM profile")
     LiveData<List<Profile>> getAll();
+
+    @Query("SELECT * FROM profile")
+    List<Profile> getAllSync();
 
     @Query("SELECT * FROM profile WHERE title LIKE :title LIMIT 1")
     Profile findByTitle(String title);

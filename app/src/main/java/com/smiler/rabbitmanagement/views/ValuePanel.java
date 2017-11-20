@@ -13,17 +13,17 @@ import com.smiler.rabbitmanagement.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OverviewPanel extends LinearLayout {
+public class ValuePanel extends LinearLayout {
     @BindView(R.id.panel_title)
     TextView title;
     @BindView(R.id.panel_value)
     TextView value;
 
-    public OverviewPanel(Context context) {
+    public ValuePanel(Context context) {
         super(context);
     }
 
-    public OverviewPanel(Context context, @Nullable AttributeSet attrs) {
+    public ValuePanel(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
         LayoutInflater.from(context).inflate(R.layout.overview_panel, this);
@@ -32,17 +32,17 @@ public class OverviewPanel extends LinearLayout {
         setGravity(Gravity.CENTER);
     }
 
-    public OverviewPanel(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public ValuePanel(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
     }
 
-    public OverviewPanel setTitle(String value) {
+    public ValuePanel setTitle(String value) {
         title.setText(value);
         return this;
     }
 
-    public OverviewPanel setValue(String value) {
+    public ValuePanel setValue(String value) {
         this.value.setText(value);
         return this;
     }

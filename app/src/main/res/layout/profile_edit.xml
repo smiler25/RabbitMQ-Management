@@ -30,16 +30,25 @@
             >
 
             <Button
-                android:id="@+id/new_game_select_first_team"
+                android:id="@+id/profile_select"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/select_profile"
                 />
+            <Button
+                android:id="@+id/profile_select_apply"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/apply_selected"
+                android:visibility="gone"
+                />
 
             <EditText
-                android:id="@+id/edit_title"
+                android:id="@+id/profile_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="text"
@@ -48,7 +57,7 @@
                 tools:ignore="LabelFor"
                 />
             <EditText
-                android:id="@+id/edit_host"
+                android:id="@+id/profile_host"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="text"
@@ -57,7 +66,7 @@
                 tools:ignore="LabelFor"
                 />
             <EditText
-                android:id="@+id/edit_login"
+                android:id="@+id/profile_login"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="text"
@@ -66,7 +75,7 @@
                 tools:ignore="LabelFor"
                 />
             <EditText
-                android:id="@+id/edit_password"
+                android:id="@+id/profile_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
@@ -76,7 +85,7 @@
                 />
 
             <CheckBox
-                android:id="@+id/edit_save_password"
+                android:id="@+id/profile_save_credentials"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="2dp"

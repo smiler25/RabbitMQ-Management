@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:paddingStart="8dp"
     android:paddingEnd="8dp"
+    android:background="@android:color/white"
     >
-    <!--android:background="@color/light_grey_background"-->
 
     <LinearLayout
         android:id="@+id/container_common"
@@ -18,11 +18,10 @@
         android:gravity="center"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:background="@android:color/transparent"
         >
 
         <LinearLayout
-            android:id="@+id/overview_queue_totals"
+            android:id="@+id/qdetail_queue_totals"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -30,7 +29,7 @@
             >
 
             <com.smiler.rabbitmanagement.views.ValuePanel
-                android:id="@+id/overview_ready"
+                android:id="@+id/qdetail_ready"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -39,7 +38,7 @@
                 />
 
             <com.smiler.rabbitmanagement.views.ValuePanel
-                android:id="@+id/overview_unacked"
+                android:id="@+id/qdetail_unacked"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -48,7 +47,7 @@
                 />
 
             <com.smiler.rabbitmanagement.views.ValuePanel
-                android:id="@+id/overview_total"
+                android:id="@+id/qdetail_total"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

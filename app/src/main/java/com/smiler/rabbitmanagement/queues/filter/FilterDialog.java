@@ -3,10 +3,11 @@ package com.smiler.rabbitmanagement.queues.filter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -19,11 +20,11 @@ import lombok.experimental.Accessors;
 
 
 public class FilterDialog extends DialogFragment {
-    public static String TAG = "RMQ-FilterDialog";
+    public static String TAG = "RMQ-SortDialog";
     private static final String ARG_VALUE = "value";
     private static final String ARG_REGEX = "regex";
 
-    @Accessors(chain = true) @Setter
+    @Accessors(chain = true) @Setter @Nullable
     private FilterDialogListener listener;
 
     @BindView(R.id.filter_value)
@@ -32,35 +33,25 @@ public class FilterDialog extends DialogFragment {
     CheckBox useRegex;
     @BindView(R.id.filter_save)
     CheckBox save;
+    @BindView(R.id.filter_select)
+    Button select;
 
     public interface FilterDialogListener {
-        void onFilterSelected(String value, boolean regex, boolean saveForProfile);
+        void onFilterSelected(Filter filter, boolean saveForProfile);
     }
 
     public static FilterDialog newInstance() {
         return new FilterDialog();
     }
 
-    public static FilterDialog newInstance(String value, boolean regex) {
-        Bundle args = new Bundle();
-        args.putString(ARG_VALUE, value);
-        args.putBoolean(ARG_REGEX, regex);
-        FilterDialog f = new FilterDialog();
-        f.setArguments(args);
-        return f;
-    }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.filter_dialog, null);
+        View v = inflater.inflate(R.layout.dialog_filter, null);
         ButterKnife.bind(this, v);
+        select.setOnClickListener(view -> System.out.print("349789797"));
 
-        builder.setView(v).setCancelable(true);
-
+        Bundle args = getArguments();
         if (args != null) {
             String value = args.getString(ARG_VALUE);
             if (value != null) {
@@ -68,21 +59,17 @@ public class FilterDialog extends DialogFragment {
             }
             useRegex.setChecked(args.getBoolean(ARG_REGEX));
         }
-        builder
-                .setPositiveButton(R.string.action_apply, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (listener != null) {
-                            listener.onFilterSelected(valueEditor.getText().toString(), useRegex.isChecked(), save.isChecked());
-                        }
+
+        return new AlertDialog.Builder(getActivity())
+                .setView(v).setCancelable(true)
+                .setPositiveButton(R.string.action_apply, (dialog, which) -> {
+                    if (listener != null) {
+                        listener.onFilterSelected(
+                                new Filter().setValue(valueEditor.getText().toString()).setRegex(useRegex.isChecked()),
+                                save.isChecked());
                     }
                 })
-                .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                });
-        return builder.create();
+                .setNegativeButton(R.string.action_cancel, (dialog, which) -> dismiss())
+                .create();
     }
 }

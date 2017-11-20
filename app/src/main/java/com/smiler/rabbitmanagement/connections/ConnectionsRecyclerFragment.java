@@ -2,8 +2,8 @@ package com.smiler.rabbitmanagement.connections;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.widget.Toast;
 
+import com.smiler.rabbitmanagement.PageType;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.BaseRecyclerFragment;
 
@@ -37,7 +37,11 @@ public class ConnectionsRecyclerFragment extends BaseRecyclerFragment<Connection
 
     public ConnectionsRecyclerAdapter initAdapter() {
         adapter = new ConnectionsRecyclerAdapter();
-        adapter.setListener(obj -> Toast.makeText(getContext(), obj.toString(), Toast.LENGTH_LONG).show());
+        adapter.setListener(obj -> {
+            if (listener != null) {
+                listener.onListElementClick(PageType.CONNECTIONS, obj);
+            }
+        });
         return adapter;
     }
 }

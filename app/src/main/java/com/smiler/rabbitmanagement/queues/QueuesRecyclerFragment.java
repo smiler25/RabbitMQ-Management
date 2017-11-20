@@ -2,11 +2,15 @@ package com.smiler.rabbitmanagement.queues;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.widget.Toast;
 
+import com.smiler.rabbitmanagement.AppRepository;
+import com.smiler.rabbitmanagement.ManagementApplication;
+import com.smiler.rabbitmanagement.PageType;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.BaseRecyclerFragment;
 import com.smiler.rabbitmanagement.detail.QueueInfo;
+import com.smiler.rabbitmanagement.queues.filter.Filter;
+import com.smiler.rabbitmanagement.queues.sort.Sort;
 
 import java.util.ArrayList;
 
@@ -38,14 +42,22 @@ public class QueuesRecyclerFragment extends BaseRecyclerFragment<QueuesListViewM
 
     public QueuesRecyclerAdapter initAdapter() {
         adapter = new QueuesRecyclerAdapter();
-        adapter.setListener(obj -> Toast.makeText(getContext(), obj.toString(), Toast.LENGTH_LONG).show());
-//        adapter.setListener(new BaseListListener<QueueInfo>() {
-//            @Override
-//            public void onListElementClick(QueueInfo queueInfo) {
-//                System.out.println("queueInfo = " + queueInfo);
-//                Toast.makeText(getContext(), queueInfo.toString(), Toast.LENGTH_LONG).show();
-//            }
-//        });
+        adapter.setListener(obj -> {
+            if (listener != null) {
+                listener.onListElementClick(PageType.QUEUES, obj);
+            }
+        });
         return adapter;
+    }
+
+    public void setQueuesFilter(Filter filter, boolean saveForProfile) {
+        if (saveForProfile) {
+            AppRepository.getInstance(getContext().getApplicationContext()).insertFilter(filter);
+        }
+        dataModel.setFilter((ManagementApplication) getContext().getApplicationContext(), filter);
+    }
+
+    public void setQueuesOrder(Sort sort) {
+        dataModel.setOrder(sort);
     }
 }

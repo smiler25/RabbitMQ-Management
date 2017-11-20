@@ -45,7 +45,7 @@ public class ConnectionsRecyclerAdapter extends BaseRecyclerAdapter<Connection, 
             vhost.setText(value.getVhost());
             user.setText(value.getUser());
             state.setText(value.getState());
-            channels.setText(Long.toString(value.getChannels()));
+            channels.setText(value.getChannels());
         };
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="OverviewPanel">
+    <declare-styleable name="ValuePanel">
         <attr name="overviewPanelStyle" format="reference"/>
     </declare-styleable>
 

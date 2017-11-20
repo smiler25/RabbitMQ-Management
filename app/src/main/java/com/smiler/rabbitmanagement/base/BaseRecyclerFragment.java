@@ -1,6 +1,7 @@
 package com.smiler.rabbitmanagement.base;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +12,11 @@ import android.view.ViewStub;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
+import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitmanagement.views.DividerItemDecoration;
+
+import lombok.Setter;
 
 
 public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Fragment implements UpdatableFragment {
@@ -21,6 +25,9 @@ public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Frag
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     protected T dataModel;
+
+    @Setter @Nullable
+    protected FragmentListListener listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

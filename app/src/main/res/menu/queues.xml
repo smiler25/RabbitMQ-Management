@@ -4,6 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="100"
+        android:title="@string/order"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_filter"
         android:orderInCategory="100"
         android:title="@string/filter"

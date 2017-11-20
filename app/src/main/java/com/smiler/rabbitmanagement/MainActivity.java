@@ -1,6 +1,7 @@
 package com.smiler.rabbitmanagement;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,17 +21,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.smiler.rabbitmanagement.base.DetailFragment;
+import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
+import com.smiler.rabbitmanagement.channels.ChannelDetailFragment;
 import com.smiler.rabbitmanagement.channels.ChannelsRecyclerFragment;
+import com.smiler.rabbitmanagement.connections.ConnectionDetailFragment;
 import com.smiler.rabbitmanagement.connections.ConnectionsRecyclerFragment;
-import com.smiler.rabbitmanagement.db.Profile;
+import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
 import com.smiler.rabbitmanagement.overview.OverviewFragment;
-import com.smiler.rabbitmanagement.profiles.ActiveProfile;
+import com.smiler.rabbitmanagement.profiles.Profile;
 import com.smiler.rabbitmanagement.profiles.ProfileSelector;
+import com.smiler.rabbitmanagement.queues.QueuesListViewModel;
 import com.smiler.rabbitmanagement.queues.QueuesRecyclerFragment;
+import com.smiler.rabbitmanagement.queues.filter.Filter;
 import com.smiler.rabbitmanagement.queues.filter.FilterDialog;
+import com.smiler.rabbitmanagement.queues.sort.Sort;
+import com.smiler.rabbitmanagement.queues.sort.SortDialog;
 import com.smiler.rabbitmanagement.settings.SettingsActivity;
-import com.smiler.rabbitmanagement.views.AppRepository;
 
 import java.util.List;
 
@@ -39,7 +47,10 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        ProfileSelector.ProfileSelectorListener, FilterDialog.FilterDialogListener {
+        ProfileSelector.ProfileSelectorListener,
+        FilterDialog.FilterDialogListener,
+        SortDialog.OrderDialogListener,
+        FragmentListListener {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -49,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements
 
     TextView drawerProfileTitle;
     PageType currentPageType = PageType.OVERVIEW;
+    private boolean detailAdded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        ActiveProfile profile = ActiveProfile.getProfile(this);
+        Profile profile = Profile.getProfile(this);
         setProfile(profile);
         setSupportActionBar(toolbar);
 
@@ -82,11 +94,16 @@ public class MainActivity extends AppCompatActivity implements
 
         navigationView.setNavigationItemSelectedListener(this);
         showFragment(currentPageType);
-        createTestProfile();
         getAllDbProfiles();
     }
 
-    private void setDrawerProfile(ActiveProfile profile) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setToolbarTitle(currentPageType);
+    }
+
+    private void setDrawerProfile(Profile profile) {
         drawerProfileTitle.setText(String.format(getString(R.string.current_profile), profile.getTitle()));
     }
 
@@ -95,6 +112,10 @@ public class MainActivity extends AppCompatActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if (detailAdded) {
+                setToolbarTitle(currentPageType);
+                detailAdded = false;
+            }
             super.onBackPressed();
         }
     }
@@ -121,6 +142,9 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_filter:
                 showFilterDialog();
+                return true;
+            case R.id.action_sort:
+                showSortDialog();
                 return true;
         }
 
@@ -154,16 +178,69 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
         }
+        ((UpdatableFragment) fragment).setListener(this);
         fragment.setRetainInstance(true);
-        // fragment.setListener(this);
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
                 .replace(R.id.fragment_layout_place, fragment, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
-        toolbar.setTitle(titleRes);
         currentPageType = type;
+        toolbar.setTitle(titleRes);
         invalidateOptionsMenu();
+    }
+
+    private void setToolbarTitle(PageType type) {
+        int titleRes = R.string.app_name;
+        switch (type) {
+            case OVERVIEW:
+                titleRes = R.string.overview;
+                break;
+            case QUEUES:
+                titleRes = R.string.queues;
+                break;
+            case CONNECTIONS:
+                titleRes = R.string.connections;
+                break;
+            case CHANNELS:
+                titleRes = R.string.channels;
+                break;
+        }
+        toolbar.setTitle(titleRes);
+    }
+
+    private void showDetails(PageType type, Object data) {
+        DetailFragment fragment = null;
+        String tag = "";
+
+        switch (type) {
+            case QUEUES:
+                fragment = QueueDetailFragment.newInstance();
+                tag = QueueDetailFragment.TAG;
+                break;
+            case CONNECTIONS:
+                fragment = ConnectionDetailFragment.newInstance();
+                tag = ConnectionDetailFragment.TAG;
+                break;
+            case CHANNELS:
+                fragment = ChannelDetailFragment.newInstance();
+                tag = ChannelDetailFragment.TAG;
+                break;
+        }
+        if (fragment == null) {
+            return;
+        }
+
+        fragment.setData(data);
+        fragment.setRetainInstance(true);
+//        fragment.setListener(this);
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(tag)
+                .add(R.id.fragment_layout_place, fragment, tag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
+        detailAdded = true;
+//        invalidateOptionsMenu();
     }
 
     @Override
@@ -205,6 +282,13 @@ public class MainActivity extends AppCompatActivity implements
         FilterDialog.newInstance().setListener(this).show(getFragmentManager(), FilterDialog.TAG);
     }
 
+    private void showSortDialog() {
+        SortDialog.newInstance()
+                .setListener(this)
+                .setSort(ViewModelProviders.of(this).get(QueuesListViewModel.class).getSort())
+                .show(getFragmentManager(), SortDialog.TAG);
+    }
+
     private void updateData() {
         FragmentManager fm = getSupportFragmentManager();
         try {
@@ -228,52 +312,48 @@ public class MainActivity extends AppCompatActivity implements
 //        }
     }
 
-    private void createTestProfile() {
-        Profile profile = new Profile()
-                .setAuthKey("test")
-                .setHost(":test host:")
-                .setLogin("guest")
-                .setTitle("FirstProfile"
-                ).setPassword("TEST");
-//        new InsertTask(getApplicationContext()).doInBackground(profile);
-        AppRepository.getInstance(getApplicationContext()).insertProfile(profile);
-    }
-
-//    @Override
-//    public void onBackPressed() {
-//        if (getSupportFragmentManager().getBackStackEntryCount() > 0 ){
-//            getSupportFragmentManager().popBackStack();
-//            toolbar.setTitle(R.string.title_activity_teams);
-//        } else {
-//            finish();
-//        }
-//    }
-
-    @Override
-    public void onProfileSelected(String title) {
-//        currentProfile = ActiveProfile();
-    }
-
-    private void setProfile(ActiveProfile profile) {
+    private void setProfile(Profile profile) {
         ((ManagementApplication) getApplicationContext()).setProfile(profile);
     }
 
     @Override
-    public void onProfileCreated(String title, String host, String login, String password) {
-        ActiveProfile profile = new ActiveProfile(title, host, login, password);
+    public void onProfileSelected(Profile profile, boolean save, boolean saveCredentials) {
         setProfile(profile);
         setDrawerProfile(profile);
+        if (save) {
+            AppRepository.getInstance(getApplicationContext()).insertProfile(profile);
+        }
     }
 
     @Override
-    public void onProfileCreatedSave(String title, String host, String login, String password) {
-        ActiveProfile profile = new ActiveProfile(title, host, login, password).save(this);
-        setProfile(profile);
-        setDrawerProfile(profile);
+    public void onFilterSelected(Filter filter, boolean saveForProfile) {
+        FragmentManager fm = getSupportFragmentManager();
+        try {
+            Fragment fragment = fm.findFragmentById(R.id.fragment_layout_place);
+            if (fragment != null) {
+                ((QueuesRecyclerFragment) fragment).setQueuesFilter(filter, saveForProfile);
+            }
+        } catch (Exception e) {
+            // log
+        }
     }
 
     @Override
-    public void onFilterSelected(String value, boolean regex, boolean saveForProfile) {
+    public void onListElementClick(PageType type, Object data) {
+        showDetails(type, data);
+    }
+
+    @Override
+    public void onOrderSelected(Sort sort) {
+        FragmentManager fm = getSupportFragmentManager();
+        try {
+            Fragment fragment = fm.findFragmentById(R.id.fragment_layout_place);
+            if (fragment != null) {
+                ((QueuesRecyclerFragment) fragment).setQueuesOrder(sort);
+            }
+        } catch (Exception e) {
+            // log
+        }
 
     }
 }

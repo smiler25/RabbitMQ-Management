@@ -67,6 +67,7 @@
     <string name="consumers" translatable="false">Consumers</string>
     <string name="select_profile">Select profile</string>
     <string name="host">Host</string>
+    <string name="port">Port</string>
     <string name="action_apply">Apply</string>
     <string name="action_apply_save">Apply and save</string>
     <string name="action_cancel">Cancel</string>
@@ -75,17 +76,31 @@
     <string name="login">Login</string>
     <string name="select">Select</string>
     <string name="current_profile">Current profile: %s</string>
+    <string name="profile_select_info" translatable="false">(%s @ %s)</string>
     <string name="api_error_queues">Get queues error (%s)</string>
     <string name="api_error_overview">Get overview error (%s)</string>
     <string name="api_error_connections">Get connections error (%s)</string>
     <string name="api_error_channels">Get channels error (%s)</string>
+    <string name="credentials_not_specified">Credentials not specified</string>
     <string name="profile_null">Profile not specified</string>
+    <string name="profile_not_select">Profile not selected</string>
     <string name="update_in_progress">Updating data</string>
     <string name="remember">Remember</string>
+    <string name="remember_credentials">Remember credentials</string>
+
     <string name="filter">Filter</string>
     <string name="filter_queues">Filter queues</string>
-    <string name="remember_credentials">Remember credentials</string>
-    <string name="use_regex">Use regex</string>
+    <string name="filter_use_regex">Use regex</string>
+
+    <string name="order">Order</string>
+    <string name="sort_enable">Enable sorting</string>
+    <string name="sort_queues">Filter queues</string>
+    <string name="sort_by_name">By name</string>
+    <string name="sort_by_ready">By ready</string>
+    <string name="sort_by_unacked">By unacked</string>
+    <string name="sort_by_total">By total</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 
     <string name="rabbit" translatable="false">RabbitMQ</string>
     <string name="cluster">Cluster</string>
@@ -94,4 +109,56 @@
     <string name="user" translatable="false">User</string>
     <string name="state">State</string>
     <string name="prefetch" translatable="false">Prefetch count</string>
+    <string name="select_saved">Select saved</string>
+    <string name="durable" translatable="false">Durable</string>
+
+    <string name="apply_selected">Apply selected (%s)</string>
+
+    <!--queue detail-->
+    <string name="message_bytes" translatable="false">Messages persistent bytes</string>
+    <string name="message_bytes_ram" translatable="false">Messages bytes in memory</string>
+    <string name="message_bytes_ready" translatable="false">Messages bytes ready</string>
+    <string name="message_bytes_unacked" translatable="false">Messages bytes unacked</string>
+    <string name="messages_ram" translatable="false">Messages in memory</string>
+    <string name="messages_ready_ram" translatable="false">Messages ready in memory</string>
+    <string name="messages_unacked_ram" translatable="false">Messages unacked in memory</string>
+    <string name="messages_persistent" translatable="false">Messages persistent</string>
+
+    <!--connection-->
+    <string name="timeout">Timeout</string>
+    <string name="heartbeat" translatable="false">Heartbeat</string>
+    <string name="protocol">Protocol</string>
+    <string name="connected_at">Connected at</string>
+    <string name="channel_max" translatable="false">Channel limit</string>
+    <string name="authentication">Authentication</string>
+    <string name="node" translatable="false">Node</string>
+    <string name="ssl" translatable="false">SSL</string>
+    <string name="ssl_hash" translatable="false">SSL hash</string>
+    <string name="ssl_cipher" translatable="false">SSL cipher</string>
+    <string name="ssl_key_exchange" translatable="false">SSL key exchange</string>
+    <string name="ssl_protocol" translatable="false">SSL protocol</string>
+    <string name="type">Type</string>
+
+    <string name="product">Product</string>
+    <string name="version">Version</string>
+    <string name="platform">Platform</string>
+    <string name="copyright" translatable="false">Copyright</string>
+    <string name="information">Information</string>
+
+
+    <!--channel-->
+    <string name="reductions" translatable="false">Reductions</string>
+    <string name="number" translatable="false">Number</string>
+    <string name="confirm">Confirm</string>
+    <string name="transactional">Transactional</string>
+    <string name="idle_since">Idle since</string>
+
+    <string name="global_prefetch_count" translatable="false">Global prefetch count</string>
+    <string name="prefetch_count" translatable="false">Prefetch count</string>
+    <string name="acks_uncommitted" translatable="false">Acks uncommitted</string>
+    <string name="messages_uncommitted" translatable="false">Messages uncommitted</string>
+    <string name="messages_unconfirmed" translatable="false">Messages unconfirmed</string>
+    <string name="messages_unacked" translatable="false">Messages unacked</string>
+    <string name="consumer_count">Consumer count</string>
+
 </resources>

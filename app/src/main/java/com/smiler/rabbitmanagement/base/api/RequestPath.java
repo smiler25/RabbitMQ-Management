@@ -7,5 +7,6 @@ public final class RequestPath {
     public static final String QUEUES_LIST = "/api/queues";
     public static final String QUEUE_DETAIL = "/api/queues/%s/%s/";
 
-    public static final String DEFAULT_VHOST = "%2F";
+    public static final String DEFAULT_VHOST = "/";
+    public static final String DEFAULT_VHOST_URL = "%2F";
 }

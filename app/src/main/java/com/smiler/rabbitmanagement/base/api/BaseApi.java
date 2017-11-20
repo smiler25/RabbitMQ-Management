@@ -1,12 +1,14 @@
 package com.smiler.rabbitmanagement.base.api;
 
+import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.VolleyClient;
-import com.smiler.rabbitmanagement.profiles.ActiveProfile;
+import com.smiler.rabbitmanagement.profiles.Profile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class BaseApi {
 
     public static <T> void requestObject(ManagementApplication context, final ApiCallback<T> callback,
                                          String path, final Class<T> classType) {
-        ActiveProfile profile = context.getProfile();
+        Profile profile = context.getProfile();
         if (profile == null) {
             callback.onError(context.getString(R.string.profile_null));
             return;
@@ -48,9 +50,14 @@ public class BaseApi {
 
     public static <T> void requestList(ManagementApplication context, final ApiCallback<ArrayList<T>> callback,
                                        String path, final Class<T> classType) {
-        ActiveProfile profile = context.getProfile();
+        Profile profile = context.getProfile();
         if (profile == null) {
             callback.onError(context.getString(R.string.profile_null));
+            return;
+        }
+        if (profile.getAuthKey().isEmpty()) {
+            Toast.makeText(context, R.string.credentials_not_specified, Toast.LENGTH_LONG).show();
+            callback.onError(context.getString(R.string.credentials_not_specified));
             return;
         }
 

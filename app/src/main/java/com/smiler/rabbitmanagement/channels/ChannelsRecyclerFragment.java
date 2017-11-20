@@ -2,8 +2,8 @@ package com.smiler.rabbitmanagement.channels;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.widget.Toast;
 
+import com.smiler.rabbitmanagement.PageType;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.BaseRecyclerFragment;
 
@@ -38,7 +38,11 @@ public class ChannelsRecyclerFragment extends BaseRecyclerFragment<ChannelsViewM
 
     public ChannelsRecyclerAdapter initAdapter() {
         adapter = new ChannelsRecyclerAdapter();
-        adapter.setListener(obj -> Toast.makeText(getContext(), obj.toString(), Toast.LENGTH_LONG).show());
+        adapter.setListener(obj -> {
+            if (listener != null) {
+                listener.onListElementClick(PageType.CHANNELS, obj);
+            }
+        });
         return adapter;
     }
 }

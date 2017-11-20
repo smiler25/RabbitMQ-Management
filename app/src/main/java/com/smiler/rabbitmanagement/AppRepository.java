@@ -1,11 +1,11 @@
-package com.smiler.rabbitmanagement.views;
+package com.smiler.rabbitmanagement;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
-import com.smiler.rabbitmanagement.AppDatabase;
-import com.smiler.rabbitmanagement.db.Profile;
+import com.smiler.rabbitmanagement.profiles.Profile;
+import com.smiler.rabbitmanagement.queues.filter.Filter;
 
 import java.util.List;
 
@@ -26,10 +26,21 @@ public class AppRepository {
     }
 
     public void insertProfile(Profile profile) {
+        if (!profile.getStoreCredentials()) {
+            profile = new Profile(profile, false);
+        }
         db.profileDao().insert(profile);
+    }
+
+    public void insertFilter(Filter filter) {
+        db.filterDao().insert(filter);
     }
 
     public LiveData<List<Profile>> getAllProfiles() {
         return db.profileDao().getAll();
+    }
+
+    public List<Profile> getAllProfilesSync() {
+        return db.profileDao().getAllSync();
     }
 }

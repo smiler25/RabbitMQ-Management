@@ -12,8 +12,9 @@ import android.widget.LinearLayout;
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.TableRowValue;
+import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
-import com.smiler.rabbitmanagement.views.OverviewPanel;
+import com.smiler.rabbitmanagement.views.ValuePanel;
 import com.smiler.rabbitmanagement.views.ValuesTable;
 
 import java.util.ArrayList;
@@ -25,11 +26,11 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
     public static final String TAG = "RMQ-OverviewFragment";
 
     @BindView(R.id.overview_ready)
-    OverviewPanel overviewPanelReady;
+    ValuePanel valuePanelReady;
     @BindView(R.id.overview_unacked)
-    OverviewPanel overviewPanelUnacked;
+    ValuePanel valuePanelUnacked;
     @BindView(R.id.overview_total)
-    OverviewPanel overviewPanelTotal;
+    ValuePanel valuePanelTotal;
     @BindView(R.id.container_info)
     LinearLayout infoContainer;
 
@@ -47,9 +48,9 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.overview, container, false);
         ButterKnife.bind(this, root);
-        overviewPanelReady.setTitle(getString(R.string.ready));
-        overviewPanelUnacked.setTitle(getString(R.string.unacked));
-        overviewPanelTotal.setTitle(getString(R.string.total));
+        valuePanelReady.setTitle(getString(R.string.ready));
+        valuePanelUnacked.setTitle(getString(R.string.unacked));
+        valuePanelTotal.setTitle(getString(R.string.total));
         dataModel = ViewModelProviders.of(this).get(OverviewViewModel.class);
 
         final Observer<Overview> observer = data -> {
@@ -63,9 +64,9 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
     }
 
     private void setView(final Overview data) {
-        overviewPanelReady.setValue(data.getQueueTotals().getMessagesReady());
-        overviewPanelUnacked.setValue(data.getQueueTotals().getMessagesUnacked());
-        overviewPanelTotal.setValue(data.getQueueTotals().getMessages());
+        valuePanelReady.setValue(data.getQueueTotals().getMessagesReady());
+        valuePanelUnacked.setValue(data.getQueueTotals().getMessagesUnacked());
+        valuePanelTotal.setValue(data.getQueueTotals().getMessages());
         ArrayList<TableRowValue> globalCounts = new ArrayList<TableRowValue>() {{
             add(new TableRowValue(getString(R.string.queues), data.getObjectTotals().getQueues()));
             add(new TableRowValue(getString(R.string.connections), data.getObjectTotals().getConnections()));
@@ -88,5 +89,10 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
         if (dataModel != null) {
             dataModel.loadData((ManagementApplication) getContext().getApplicationContext());
         }
+    }
+
+    @Override
+    public void setListener(FragmentListListener listener) {
+
     }
 }

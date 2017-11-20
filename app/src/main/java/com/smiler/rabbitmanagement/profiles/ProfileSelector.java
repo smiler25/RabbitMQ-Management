@@ -3,11 +3,14 @@ package com.smiler.rabbitmanagement.profiles;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.R;
 
@@ -20,25 +23,32 @@ import lombok.experimental.Accessors;
 public class ProfileSelector extends DialogFragment {
     public static String TAG = "RMQ-ProfileSelector";
 
-    @Accessors(chain = true) @Setter
+    @Accessors(chain = true) @Setter @Nullable
+    private Profile profile;
+
+    private Profile selectedProfile;
+    @Accessors(chain = true) @Setter @Nullable
     private ProfileSelectorListener listener;
 
-    @BindView(R.id.edit_title)
+    @BindView(R.id.profile_title)
     EditText title;
-    @BindView(R.id.edit_host)
+    @BindView(R.id.profile_host)
     EditText host;
-    @BindView(R.id.edit_login)
+    @BindView(R.id.profile_login)
     EditText login;
-    @BindView(R.id.edit_password)
+    @BindView(R.id.profile_password)
     EditText password;
+    @BindView(R.id.profile_save_credentials)
+    CheckBox saveCredentials;
 
-//    @BindView(R.id.edit_title)
-//    private Button profileSelector;
+    @BindView(R.id.profile_select)
+    Button profileSelector;
+    @BindView(R.id.profile_select_apply)
+    Button profileSelectorApply;
+
 
     public interface ProfileSelectorListener {
-        void onProfileSelected(String title);
-        void onProfileCreated(String title, String host, String login, String password);
-        void onProfileCreatedSave(String title, String host, String login, String password);
+        void onProfileSelected(Profile profile, boolean save, boolean saveCredentials);
     }
 
     public static ProfileSelector newInstance() {
@@ -47,47 +57,54 @@ public class ProfileSelector extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.profile_edit, null);
         ButterKnife.bind(this, v);
 
-        builder.setView(v).setCancelable(true);
+        profileSelector.setOnClickListener(v1 -> ProfilesListDialog.newInstance()
+                .setListener(this::setSelectedProfile)
+                .show(getFragmentManager(), ProfilesListDialog.TAG));
 
-//        TextView title = v.findViewById(R.id.dialog_title);
-//        title.setText(String.format(getResources().getString(titleResId), teamType));
+        profileSelectorApply.setOnClickListener(v1 -> {
+            if (listener != null) {
+                if (selectedProfile != null) {
+                    listener.onProfileSelected(selectedProfile, false, false);
+                    dismiss();
+                } else {
+                    Toast.makeText(getActivity(), R.string.profile_not_select, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
-//        String name = args.getString("name");
-//        if (name != null) {
-//            host.setText(name);
-//            host.selectAll();
-//        }
-
-        builder
-                .setPositiveButton(R.string.action_apply_save, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (listener != null) {
-                            listener.onProfileCreatedSave(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString());
-                        }
+        return new AlertDialog.Builder(getActivity())
+                .setView(v)
+                .setCancelable(true)
+                .setPositiveButton(R.string.action_apply_save, (dialog, which) -> {
+                    if (listener != null) {
+                        listener.onProfileSelected(
+                                new Profile(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString()),
+                                true,
+                                saveCredentials.isChecked());
                     }
                 })
-                .setNegativeButton(R.string.action_apply, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (listener != null) {
-                            listener.onProfileCreated(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString());
-                        }
+                .setNegativeButton(R.string.action_apply, (dialog, which) -> {
+                    if (listener != null) {
+                        listener.onProfileSelected(
+                                new Profile(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString()),
+                                false,
+                                saveCredentials.isChecked());
                     }
                 })
-                .setNeutralButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                });
-        return builder.create();
+                .setNeutralButton(R.string.action_cancel, (dialog, which) -> dismiss())
+                .create();
+    }
+
+    private void setSelectedProfile(Profile profile) {
+        title.setText(profile.getTitle());
+        host.setText(profile.getHost());
+        login.setText(profile.getLogin());
+        selectedProfile = profile;
+        profileSelectorApply.setText(String.format(getString(R.string.apply_selected), profile.getTitle()));
+        profileSelectorApply.setVisibility(View.VISIBLE);
     }
 }
