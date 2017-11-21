@@ -14,12 +14,13 @@ import java.util.Collections;
 import java.util.regex.Pattern;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class QueuesListViewModel extends BaseViewModel<ArrayList<QueueInfo>> {
-    @Nullable @Getter
+    @Nullable @Getter @Setter
     private Filter filter;
 
-    @Nullable @Getter
+    @Nullable @Getter @Setter
     private Sort sort;
 
     protected void loadData(ManagementApplication context) {

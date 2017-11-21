@@ -1,8 +1,9 @@
 package com.smiler.rabbitmanagement;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -38,12 +39,15 @@ import com.smiler.rabbitmanagement.queues.filter.Filter;
 import com.smiler.rabbitmanagement.queues.filter.FilterDialog;
 import com.smiler.rabbitmanagement.queues.sort.Sort;
 import com.smiler.rabbitmanagement.queues.sort.SortDialog;
+import com.smiler.rabbitmanagement.queues.sort.SortTypes;
 import com.smiler.rabbitmanagement.settings.SettingsActivity;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.smiler.rabbitmanagement.Constants.STATE_FILTER_ID;
+import static com.smiler.rabbitmanagement.Constants.STATE_SORT_ASC;
+import static com.smiler.rabbitmanagement.Constants.STATE_SORT_TYPE;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -68,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Profile profile = Profile.getProfile(this);
-        setProfile(profile);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -87,14 +89,54 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
         headerView.findViewById(R.id.nav_select_profile).setOnClickListener(v -> showProfileDialog());
-        drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
-        if (profile.getTitle() != null && !profile.getTitle().equals("")) {
-            setDrawerProfile(profile);
-        }
-
         navigationView.setNavigationItemSelectedListener(this);
+        drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
+        restoreState();
         showFragment(currentPageType);
-        getAllDbProfiles();
+    }
+
+    private void restoreState() {
+        int profileId = Profile.getSavedId(this);
+        if (profileId != -1) {
+            Profile profile = AppRepository.getInstance(getApplicationContext()).getProfile(profileId);
+            setProfile(profile);
+            if (!profile.getTitle().isEmpty()) {
+                setDrawerProfile(profile);
+            }
+        }
+        SharedPreferences statePref = getPreferences(Context.MODE_PRIVATE);
+        int filterId = statePref.getInt(STATE_FILTER_ID, -1);
+        String sortTypeValue = statePref.getString(STATE_SORT_TYPE, "");
+        boolean sortAsc = statePref.getBoolean(STATE_SORT_ASC, false);
+        if (filterId != -1) {
+            Filter filter = AppRepository.getInstance(getApplicationContext()).getFilter(filterId);
+            if (filter != null) {
+                ViewModelProviders.of(this).get(QueuesListViewModel.class).setFilter(filter);
+            }
+        }
+        if (!sortTypeValue.isEmpty()) {
+            SortTypes sortType = null;
+            try {
+                sortType = SortTypes.valueOf(sortTypeValue);
+            } catch (IllegalArgumentException e) {
+                statePref.edit().remove(STATE_SORT_TYPE).apply();
+                return;
+            }
+            Sort sort = new Sort().setAscending(sortAsc).setType(sortType);
+            ViewModelProviders.of(this).get(QueuesListViewModel.class).setSort(sort);
+        }
+    }
+
+    private void saveCurrentFilter(Filter filter) {
+        getPreferences(Context.MODE_PRIVATE).edit().putInt(STATE_FILTER_ID, filter.getId()).apply();
+    }
+
+    private void saveCurrentSort(Sort sort) {
+        getPreferences(Context.MODE_PRIVATE)
+                .edit()
+                .putString(STATE_SORT_TYPE, sort.getType().name())
+                .putBoolean(STATE_SORT_ASC, sort.getAscending())
+                .apply();
     }
 
     @Override
@@ -301,17 +343,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void getAllDbProfiles() {
-        LiveData<List<Profile>> profiles = AppRepository.getInstance(getApplicationContext()).getAllProfiles();
-        profiles.observe(this, System.out::println);
-//        profiles.observe(this, (profile) -> {
-//            System.out.println(profile);
-//        });
-//        for (Profile profile : profiles) {
-//            System.out.println(profile);
-//        }
-    }
-
     private void setProfile(Profile profile) {
         ((ManagementApplication) getApplicationContext()).setProfile(profile);
     }
@@ -323,6 +354,7 @@ public class MainActivity extends AppCompatActivity implements
         if (save) {
             AppRepository.getInstance(getApplicationContext()).insertProfile(profile);
         }
+        profile.saveCurrent(this);
     }
 
     @Override
@@ -336,6 +368,7 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception e) {
             // log
         }
+        saveCurrentFilter(filter);
     }
 
     @Override
@@ -354,6 +387,6 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception e) {
             // log
         }
-
+        saveCurrentSort(sort);
     }
 }

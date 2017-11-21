@@ -40,7 +40,19 @@ public class AppRepository {
         return db.profileDao().getAll();
     }
 
+    public Profile getProfile(int id) {
+        return db.profileDao().findById(id);
+    }
+
     public List<Profile> getAllProfilesSync() {
         return db.profileDao().getAllSync();
+    }
+
+    public List<Filter> getAllFiltersSync() {
+        return db.filterDao().getAllSync();
+    }
+
+    public Filter getFilter(int id) {
+        return db.filterDao().findById(id);
     }
 }

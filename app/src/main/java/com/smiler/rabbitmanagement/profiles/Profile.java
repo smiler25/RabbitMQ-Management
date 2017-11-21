@@ -12,18 +12,13 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import static com.smiler.rabbitmanagement.Constants.STATE_PROFILE_ID;
+
 @Accessors(chain = true)
 @ToString
 @Data
 @Entity(tableName = "profile")
 public class Profile {
-    @Ignore
-    private static final String STATE_TITLE = "TITLE";
-    @Ignore
-    private static final String STATE_HOST = "HOST";
-    @Ignore
-    private static final String STATE_KEY = "KEY";
-
     @PrimaryKey(autoGenerate = true)
     public int id;
 
@@ -68,23 +63,13 @@ public class Profile {
         this.authKey = authKey;
     }
 
-    //    public ActiveProfile save(Activity activity) {
-//        SharedPreferences statePref = activity.getPreferences(Context.MODE_PRIVATE);
-//        statePref.edit()
-//                .putString(STATE_TITLE, title)
-//                .putString(STATE_HOST, host)
-//                .putString(STATE_KEY, authKey)
-//                .apply();
-//        return this;
-//    }
-//
-    public static Profile getProfile(Activity activity) {
+    public void saveCurrent(Activity activity) {
+        activity.getPreferences(Context.MODE_PRIVATE).edit().putInt(STATE_PROFILE_ID, id).apply();
+    }
+
+    public static int getSavedId(Activity activity) {
         SharedPreferences statePref = activity.getPreferences(Context.MODE_PRIVATE);
-        return new Profile(
-                statePref.getString(STATE_TITLE, null),
-                statePref.getString(STATE_HOST, null),
-                statePref.getString(STATE_KEY, null)
-        );
+        return statePref.getInt(STATE_PROFILE_ID, -1);
     }
 
 }

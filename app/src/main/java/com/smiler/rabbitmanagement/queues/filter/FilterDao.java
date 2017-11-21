@@ -15,6 +15,12 @@ public interface FilterDao {
     @Query("SELECT * FROM queue_filter")
     LiveData<List<Filter>> getAll();
 
+    @Query("SELECT * FROM queue_filter")
+    List<Filter> getAllSync();
+
+    @Query("SELECT * FROM queue_filter WHERE id LIKE :id LIMIT 1")
+    Filter findById(int id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Filter filter);
 

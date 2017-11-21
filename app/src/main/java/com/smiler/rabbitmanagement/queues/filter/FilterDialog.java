@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.smiler.rabbitmanagement.R;
+import com.smiler.rabbitmanagement.profiles.ProfilesListDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +37,10 @@ public class FilterDialog extends DialogFragment {
     @BindView(R.id.filter_select)
     Button select;
 
+    @Setter @Nullable
+    private Filter filter;
+    private Filter selectedFilter;
+
     public interface FilterDialogListener {
         void onFilterSelected(Filter filter, boolean saveForProfile);
     }
@@ -49,15 +54,13 @@ public class FilterDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_filter, null);
         ButterKnife.bind(this, v);
-        select.setOnClickListener(view -> System.out.print("349789797"));
+        select.setOnClickListener(v1 -> FiltersListDialog.newInstance()
+                .setListener(this::setSelectedFilter)
+                .show(getFragmentManager(), ProfilesListDialog.TAG));
 
-        Bundle args = getArguments();
-        if (args != null) {
-            String value = args.getString(ARG_VALUE);
-            if (value != null) {
-                valueEditor.setText(value);
-            }
-            useRegex.setChecked(args.getBoolean(ARG_REGEX));
+        if (filter != null) {
+            valueEditor.setText(filter.getValue());
+            useRegex.setChecked(filter.isRegex());
         }
 
         return new AlertDialog.Builder(getActivity())
@@ -71,5 +74,11 @@ public class FilterDialog extends DialogFragment {
                 })
                 .setNegativeButton(R.string.action_cancel, (dialog, which) -> dismiss())
                 .create();
+    }
+
+    private void setSelectedFilter(Filter filter) {
+        selectedFilter = filter;
+        valueEditor.setText(filter.getValue());
+        useRegex.setChecked(filter.isRegex());
     }
 }

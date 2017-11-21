@@ -18,8 +18,8 @@ public interface ProfileDao {
     @Query("SELECT * FROM profile")
     List<Profile> getAllSync();
 
-    @Query("SELECT * FROM profile WHERE title LIKE :title LIMIT 1")
-    Profile findByTitle(String title);
+    @Query("SELECT * FROM profile WHERE id LIKE :id LIMIT 1")
+    Profile findById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Profile profile);

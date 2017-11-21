@@ -83,7 +83,7 @@
     <string name="api_error_channels">Get channels error (%s)</string>
     <string name="credentials_not_specified">Credentials not specified</string>
     <string name="profile_null">Profile not specified</string>
-    <string name="profile_not_select">Profile not selected</string>
+    <string name="profile_not_selected">Profile not selected</string>
     <string name="update_in_progress">Updating data</string>
     <string name="remember">Remember</string>
     <string name="remember_credentials">Remember credentials</string>

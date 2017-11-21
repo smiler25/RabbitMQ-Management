@@ -71,7 +71,7 @@ public class ProfileSelector extends DialogFragment {
                     listener.onProfileSelected(selectedProfile, false, false);
                     dismiss();
                 } else {
-                    Toast.makeText(getActivity(), R.string.profile_not_select, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.profile_not_selected, Toast.LENGTH_LONG).show();
                 }
             }
         });
