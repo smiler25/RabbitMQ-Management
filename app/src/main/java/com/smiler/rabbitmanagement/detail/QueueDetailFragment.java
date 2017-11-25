@@ -3,6 +3,7 @@ package com.smiler.rabbitmanagement.detail;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.smiler.rabbitmanagement.base.HumanString;
 import com.smiler.rabbitmanagement.base.TableRowValue;
 import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
+import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragmentListener;
 import com.smiler.rabbitmanagement.views.ValuePanel;
 import com.smiler.rabbitmanagement.views.ValuesTable;
 
@@ -29,6 +31,8 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> implements Up
     public static final String TAG = "RMQ-QueueDetailFragment";
     private static final String ARG_NAME = "name";
 
+    @Setter @Nullable
+    protected UpdatableFragmentListener callback;
     @Setter
     private QueueInfo data;
 
@@ -107,4 +111,5 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> implements Up
     public void setListener(FragmentListListener listener) {
 
     }
+
 }

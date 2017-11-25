@@ -22,9 +22,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.smiler.rabbitmanagement.base.AndroidUtils;
 import com.smiler.rabbitmanagement.base.DetailFragment;
 import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
+import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragmentListener;
 import com.smiler.rabbitmanagement.channels.ChannelDetailFragment;
 import com.smiler.rabbitmanagement.channels.ChannelsRecyclerFragment;
 import com.smiler.rabbitmanagement.connections.ConnectionDetailFragment;
@@ -55,17 +57,20 @@ public class MainActivity extends AppCompatActivity implements
         ProfileSelector.ProfileSelectorListener,
         FilterDialog.FilterDialogListener,
         SortDialog.OrderDialogListener,
-        FragmentListListener {
+        FragmentListListener,
+        UpdatableFragmentListener
+{
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.loader_overlay)
+    View loaderOverlay;
 
     private Preferences preferences;
-    TextView drawerProfileTitle;
-    PageType currentPageType = PageType.OVERVIEW;
+    private TextView drawerProfileTitle;
+    private PageType currentPageType = PageType.OVERVIEW;
     private boolean detailAdded;
 
     @Override
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> updateData(view));
+        fab.setOnClickListener(this::updateData);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements
         headerView.findViewById(R.id.nav_select_profile).setOnClickListener(v -> showProfileDialog());
         navigationView.setNavigationItemSelectedListener(this);
         drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
-
         preferences = Preferences.getInstance(getApplicationContext());
         preferences.read();
         preferences.setAfterCreate(true);
@@ -264,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements
 
         }
         ((UpdatableFragment) fragment).setListener(this);
+        ((UpdatableFragment) fragment).setCallback(this);
         fragment.setRetainInstance(true);
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack(null)
@@ -380,12 +385,19 @@ public class MainActivity extends AppCompatActivity implements
             Fragment fragment = fm.findFragmentById(R.id.fragment_layout_place);
             if (fragment != null) {
                 ((UpdatableFragment) fragment).updateData();
-                Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG).show();
             }
         } catch (Exception e) {
 //            log
         }
+    }
+
+    private void showLoaderView() {
+        AndroidUtils.animateView(loaderOverlay, View.VISIBLE, 0.4f, 200);
+    }
+
+    private void hideLoaderView() {
+        AndroidUtils.animateView(loaderOverlay, View.GONE, 0, 200);
     }
 
     private void setProfile(Profile profile) {
@@ -438,5 +450,15 @@ public class MainActivity extends AppCompatActivity implements
             // log
         }
         saveCurrentSort(sort);
+    }
+
+    @Override
+    public void startLoading() {
+        showLoaderView();
+    }
+
+    @Override
+    public void stopLoading() {
+        hideLoaderView();
     }
 }

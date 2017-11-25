@@ -14,6 +14,7 @@ import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
+import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragmentListener;
 import com.smiler.rabbitmanagement.preferences.Preferences;
 import com.smiler.rabbitmanagement.views.DividerItemDecoration;
 
@@ -29,6 +30,8 @@ public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Frag
 
     @Setter @Nullable
     protected FragmentListListener listener;
+    @Setter @Nullable
+    protected UpdatableFragmentListener callback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,9 @@ public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Frag
 
     @Override
     public void updateData() {
+        if (callback != null) {
+            callback.startLoading();
+        }
         if (dataModel != null) {
             dataModel.loadData((ManagementApplication) getContext().getApplicationContext());
         }

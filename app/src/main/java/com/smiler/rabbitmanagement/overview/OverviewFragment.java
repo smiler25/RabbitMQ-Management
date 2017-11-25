@@ -3,6 +3,7 @@ package com.smiler.rabbitmanagement.overview;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.TableRowValue;
 import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
+import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragmentListener;
+import com.smiler.rabbitmanagement.preferences.Preferences;
 import com.smiler.rabbitmanagement.views.ValuePanel;
 import com.smiler.rabbitmanagement.views.ValuesTable;
 
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import lombok.Setter;
 
 public class OverviewFragment extends Fragment implements UpdatableFragment {
     public static final String TAG = "RMQ-OverviewFragment";
@@ -34,6 +38,9 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
     ValuePanel valuePanelTotal;
     @BindView(R.id.container_info)
     LinearLayout infoContainer;
+
+    @Setter @Nullable
+    protected UpdatableFragmentListener callback;
 
     private OverviewViewModel dataModel;
 
@@ -58,15 +65,23 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
             if (data != null) {
                 setView(data);
             }
+            if (callback != null) {
+                callback.stopLoading();
+            }
         };
         final Observer<String > observerError = msg -> {
             if (msg != null) {
                 Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
             }
+            if (callback != null) {
+                callback.stopLoading();
+            }
         };
         dataModel.getModel().observe(this, observer);
         dataModel.getError().observe(this, observerError);
-        updateData();
+        if (Preferences.getInstance(getContext()).isLoadOnOpen()) {
+            updateData();
+        }
         return root;
     }
 
@@ -93,6 +108,9 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
 
     @Override
     public void updateData() {
+        if (callback != null) {
+            callback.startLoading();
+        }
         if (dataModel != null) {
             dataModel.loadData((ManagementApplication) getContext().getApplicationContext());
         }

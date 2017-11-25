@@ -31,6 +31,9 @@ public class ChannelsRecyclerFragment extends BaseRecyclerFragment<ChannelsViewM
             if (data != null) {
                 adapter.updateData(data);
             }
+            if (callback != null) {
+                callback.stopLoading();
+            }
         };
         dataModel.getModel().observe(this, observer);
 

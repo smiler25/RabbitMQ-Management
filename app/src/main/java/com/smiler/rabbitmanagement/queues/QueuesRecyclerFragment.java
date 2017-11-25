@@ -36,6 +36,9 @@ public class QueuesRecyclerFragment extends BaseRecyclerFragment<QueuesListViewM
             if (data != null) {
                 adapter.updateData(data);
             }
+            if (callback != null) {
+                callback.stopLoading();
+            }
         };
         dataModel.getModel().observe(this, observer);
     }

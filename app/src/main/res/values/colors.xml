@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#EF6C00</color>
     <color name="colorAccent">#FFB74D</color>
     <color name="colorPrimaryLight">#FFE0B2</color>
-
+    <color name="loader">#4CAF50</color>
     <color name="listOdd">#FFFFFF</color>
     <color name="listEven">#FFF3E0</color>
 </resources>
