@@ -68,9 +68,9 @@
     <string name="select_profile">Select profile</string>
     <string name="host">Host</string>
     <string name="port">Port</string>
-    <string name="action_apply">Apply</string>
-    <string name="action_apply_save">Apply and save</string>
-    <string name="action_cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="apply_save">Apply and save</string>
+    <string name="cancel">Cancel</string>
     <string name="profile">Profile</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -160,5 +160,9 @@
     <string name="messages_unconfirmed" translatable="false">Messages unconfirmed</string>
     <string name="messages_unacked" translatable="false">Messages unacked</string>
     <string name="consumer_count">Consumer count</string>
+    <string name="pref_load_on_open">Load data when opening section</string>
+    <string name="pref_save_active_profile">Remember active profile</string>
+    <string name="pref_save_active_filter">Remember active filter</string>
+    <string name="pref_save_active_sort">Remember active sort</string>
 
 </resources>

@@ -25,15 +25,19 @@ public class AppRepository {
                 .allowMainThreadQueries().build();
     }
 
-    public void insertProfile(Profile profile) {
+    public Profile insertProfile(Profile profile) {
         if (!profile.getStoreCredentials()) {
             profile = new Profile(profile, false);
         }
-        db.profileDao().insert(profile);
+        return db.profileDao().findById((int) db.profileDao().insert(profile));
     }
 
-    public void insertFilter(Filter filter) {
-        db.filterDao().insert(filter);
+//    public int insertFilter(Filter filter) {
+//        return (int) db.filterDao().insert(filter);
+//    }
+
+    public Filter insertFilter(Filter filter) {
+        return db.filterDao().findById((int) db.filterDao().insert(filter));
     }
 
     public LiveData<List<Profile>> getAllProfiles() {

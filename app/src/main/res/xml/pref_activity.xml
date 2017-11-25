@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    >
+
+        <CheckBoxPreference
+            android:key="load_on_open"
+            android:title="@string/pref_load_on_open"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="save_active_profile"
+            android:title="@string/pref_save_active_profile"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="save_active_filter"
+            android:title="@string/pref_save_active_filter"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="save_active_sort"
+            android:title="@string/pref_save_active_sort"
+            android:defaultValue="true" />
+
+</PreferenceScreen>

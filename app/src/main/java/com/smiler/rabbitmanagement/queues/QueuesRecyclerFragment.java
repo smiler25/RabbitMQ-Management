@@ -50,11 +50,12 @@ public class QueuesRecyclerFragment extends BaseRecyclerFragment<QueuesListViewM
         return adapter;
     }
 
-    public void setQueuesFilter(Filter filter, boolean saveForProfile) {
+    public Filter setQueuesFilter(Filter filter, boolean saveForProfile) {
         if (saveForProfile) {
-            AppRepository.getInstance(getContext().getApplicationContext()).insertFilter(filter);
+            filter = AppRepository.getInstance(getContext().getApplicationContext()).insertFilter(filter);
         }
         dataModel.setFilter((ManagementApplication) getContext().getApplicationContext(), filter);
+        return filter;
     }
 
     public void setQueuesOrder(Sort sort) {

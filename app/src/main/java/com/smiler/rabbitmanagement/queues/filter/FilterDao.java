@@ -22,7 +22,7 @@ public interface FilterDao {
     Filter findById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Filter filter);
+    long insert(Filter filter);
 
     @Delete
     void delete(Filter filter);

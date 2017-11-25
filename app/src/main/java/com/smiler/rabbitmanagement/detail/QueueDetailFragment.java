@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.DetailFragment;
 import com.smiler.rabbitmanagement.base.HumanString;
 import com.smiler.rabbitmanagement.base.TableRowValue;
+import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
+import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitmanagement.views.ValuePanel;
 import com.smiler.rabbitmanagement.views.ValuesTable;
 
@@ -22,10 +25,9 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 
-public class QueueDetailFragment extends DetailFragment<QueueInfo> {
+public class QueueDetailFragment extends DetailFragment<QueueInfo> implements UpdatableFragment {
     public static final String TAG = "RMQ-QueueDetailFragment";
     private static final String ARG_NAME = "name";
-    private String name;
 
     @Setter
     private QueueInfo data;
@@ -94,16 +96,15 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> {
         infoContainer.addView(new ValuesTable(getContext(), info));
     }
 
-
-//    private void initData() {
-//        data = QueueDetailApi.getInfo(name, data.getVhost());
-//    }
-
-    public void updateContent(String name) {
-        this.name = name;
-//        initData();
+    @Override
+    public void updateData() {
+        if (dataModel != null) {
+            dataModel.loadData((ManagementApplication) getContext().getApplicationContext());
+        }
     }
 
-    //    public void setListener(FragmentListListener listener) {
-//    }
+    @Override
+    public void setListener(FragmentListListener listener) {
+
+    }
 }

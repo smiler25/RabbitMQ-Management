@@ -65,12 +65,12 @@ public class SortDialog extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setCancelable(true)
-                .setPositiveButton(R.string.action_apply, (dialog, which) -> {
+                .setPositiveButton(R.string.apply, (dialog, which) -> {
                     if (listener != null) {
                         listener.onOrderSelected(getSelectedSort());
                     }
                 })
-                .setNegativeButton(R.string.action_cancel, (dialog, which) -> dismiss())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dismiss())
                 .create();
     }
 

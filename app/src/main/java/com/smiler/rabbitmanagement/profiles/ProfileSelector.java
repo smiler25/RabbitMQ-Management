@@ -79,7 +79,7 @@ public class ProfileSelector extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setCancelable(true)
-                .setPositiveButton(R.string.action_apply_save, (dialog, which) -> {
+                .setPositiveButton(R.string.apply_save, (dialog, which) -> {
                     if (listener != null) {
                         listener.onProfileSelected(
                                 new Profile(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString()),
@@ -87,7 +87,7 @@ public class ProfileSelector extends DialogFragment {
                                 saveCredentials.isChecked());
                     }
                 })
-                .setNegativeButton(R.string.action_apply, (dialog, which) -> {
+                .setNegativeButton(R.string.apply, (dialog, which) -> {
                     if (listener != null) {
                         listener.onProfileSelected(
                                 new Profile(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString()),
@@ -95,7 +95,7 @@ public class ProfileSelector extends DialogFragment {
                                 saveCredentials.isChecked());
                     }
                 })
-                .setNeutralButton(R.string.action_cancel, (dialog, which) -> dismiss())
+                .setNeutralButton(R.string.cancel, (dialog, which) -> dismiss())
                 .create();
     }
 

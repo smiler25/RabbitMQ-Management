@@ -18,7 +18,7 @@ class ConnectionsViewModel extends BaseViewModel<ArrayList<Connection>> {
 
             @Override
             public void onError(String msg) {
-//                Toast.makeText(getContext(), String.format(getString(R.string.api_error_queues), msg), Toast.LENGTH_LONG).show();
+                errorMessage.setValue(msg);
             }
         });
     }

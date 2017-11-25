@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
@@ -58,7 +59,13 @@ public class OverviewFragment extends Fragment implements UpdatableFragment {
                 setView(data);
             }
         };
+        final Observer<String > observerError = msg -> {
+            if (msg != null) {
+                Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
+            }
+        };
         dataModel.getModel().observe(this, observer);
+        dataModel.getError().observe(this, observerError);
         updateData();
         return root;
     }

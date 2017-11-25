@@ -21,7 +21,7 @@ class QueueDetailViewModel extends BaseViewModel<QueueInfo> {
 
             @Override
             public void onError(String msg) {
-//                Toast.makeText(context, String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
+                errorMessage.setValue(msg);
             }
         });
     }

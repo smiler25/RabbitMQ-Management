@@ -65,14 +65,14 @@ public class FilterDialog extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setView(v).setCancelable(true)
-                .setPositiveButton(R.string.action_apply, (dialog, which) -> {
+                .setPositiveButton(R.string.apply, (dialog, which) -> {
                     if (listener != null) {
                         listener.onFilterSelected(
                                 new Filter().setValue(valueEditor.getText().toString()).setRegex(useRegex.isChecked()),
                                 save.isChecked());
                     }
                 })
-                .setNegativeButton(R.string.action_cancel, (dialog, which) -> dismiss())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dismiss())
                 .create();
     }
 

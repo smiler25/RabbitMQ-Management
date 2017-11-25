@@ -7,14 +7,14 @@
         android:id="@+id/action_sort"
         android:orderInCategory="100"
         android:title="@string/order"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/ic_sort_white_24dp"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_filter"
         android:orderInCategory="100"
         android:title="@string/filter"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
         app:showAsAction="ifRoom"/>
 
     <item

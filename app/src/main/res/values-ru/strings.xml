@@ -10,9 +10,9 @@
     <string name="title">Название</string>
     <string name="value">Значение</string>
     <string name="select_profile">Выбрать профиль</string>
-    <string name="action_apply">Выбрать</string>
-    <string name="action_apply_save">Выбрать и сохранить</string>
-    <string name="action_cancel">Отменить</string>
+    <string name="apply">Выбрать</string>
+    <string name="apply_save">Выбрать и сохранить</string>
+    <string name="cancel">Отменить</string>
     <string name="profile">Профиль</string>
     <string name="password">Пароль</string>
     <string name="login">Логин</string>
@@ -61,4 +61,8 @@
     <string name="consumer_count">Число обработчиков</string>
     <string name="idle_since">Неактивен с</string>
     <string name="apply_selected">Применить выбранный (%s)</string>
+    <string name="pref_load_on_open">Загружать данные при открытии раздела</string>
+    <string name="pref_save_active_profile">Запоминать активный профиль</string>
+    <string name="pref_save_active_filter">Запоминать активный фильтр</string>
+    <string name="pref_save_active_sort">Запоминать активную сортировку</string>
 </resources>

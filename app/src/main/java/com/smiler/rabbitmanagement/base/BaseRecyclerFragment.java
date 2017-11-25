@@ -14,6 +14,7 @@ import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.base.interfaces.FragmentListListener;
 import com.smiler.rabbitmanagement.base.interfaces.UpdatableFragment;
+import com.smiler.rabbitmanagement.preferences.Preferences;
 import com.smiler.rabbitmanagement.views.DividerItemDecoration;
 
 import lombok.Setter;
@@ -33,7 +34,9 @@ public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Frag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initModel();
-        updateData();
+        if (Preferences.getInstance(getContext()).isLoadOnOpen()) {
+            updateData();
+        }
     }
 
     @Override

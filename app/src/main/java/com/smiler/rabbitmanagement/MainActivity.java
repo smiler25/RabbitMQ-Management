@@ -31,6 +31,8 @@ import com.smiler.rabbitmanagement.connections.ConnectionDetailFragment;
 import com.smiler.rabbitmanagement.connections.ConnectionsRecyclerFragment;
 import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
 import com.smiler.rabbitmanagement.overview.OverviewFragment;
+import com.smiler.rabbitmanagement.preferences.PrefActivity;
+import com.smiler.rabbitmanagement.preferences.Preferences;
 import com.smiler.rabbitmanagement.profiles.Profile;
 import com.smiler.rabbitmanagement.profiles.ProfileSelector;
 import com.smiler.rabbitmanagement.queues.QueuesListViewModel;
@@ -40,7 +42,6 @@ import com.smiler.rabbitmanagement.queues.filter.FilterDialog;
 import com.smiler.rabbitmanagement.queues.sort.Sort;
 import com.smiler.rabbitmanagement.queues.sort.SortDialog;
 import com.smiler.rabbitmanagement.queues.sort.SortTypes;
-import com.smiler.rabbitmanagement.settings.SettingsActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    private Preferences preferences;
     TextView drawerProfileTitle;
     PageType currentPageType = PageType.OVERVIEW;
     private boolean detailAdded;
@@ -75,11 +77,7 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> {
-            Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            updateData();
-        });
+        fab.setOnClickListener(view -> updateData(view));
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -91,29 +89,80 @@ public class MainActivity extends AppCompatActivity implements
         headerView.findViewById(R.id.nav_select_profile).setOnClickListener(v -> showProfileDialog());
         navigationView.setNavigationItemSelectedListener(this);
         drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
+
+        preferences = Preferences.getInstance(getApplicationContext());
+        preferences.read();
+        preferences.setAfterCreate(true);
         restoreState();
         showFragment(currentPageType);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setToolbarTitle(currentPageType);
+        if (preferences.isAfterCreate()) {
+            preferences.setAfterCreate(false);
+        } else {
+            preferences.read();
+            if (preferences.isSaveActiveProfileChanged()) {
+                Profile profile = getProfile();
+                if (profile == null) {
+                    restoreProfile();
+                } else {
+                    profile.saveCurrent(this);
+                }
+            }
+            if (preferences.isSaveActiveFilterChanged()) {
+                restoreFilter();
+            }
+            if (preferences.isSaveActiveSortChanged()) {
+                restoreSort();
+            }
+        }
+        preferences.resetChangeStates();
+    }
+
     private void restoreState() {
+        if (preferences.isSaveActiveProfile()) {
+            restoreProfile();
+        }
+        if (preferences.isSaveActiveFilter()) {
+            restoreFilter();
+        }
+        if (preferences.isSaveActiveSort()) {
+            restoreSort();
+        }
+    }
+
+    private void restoreProfile() {
         int profileId = Profile.getSavedId(this);
         if (profileId != -1) {
             Profile profile = AppRepository.getInstance(getApplicationContext()).getProfile(profileId);
-            setProfile(profile);
-            if (!profile.getTitle().isEmpty()) {
-                setDrawerProfile(profile);
+            if (profile != null) {
+                setProfile(profile);
+                if (!profile.getTitle().isEmpty()) {
+                    setDrawerProfile(profile);
+                }
             }
         }
+    }
+
+    private void restoreFilter() {
         SharedPreferences statePref = getPreferences(Context.MODE_PRIVATE);
         int filterId = statePref.getInt(STATE_FILTER_ID, -1);
-        String sortTypeValue = statePref.getString(STATE_SORT_TYPE, "");
-        boolean sortAsc = statePref.getBoolean(STATE_SORT_ASC, false);
         if (filterId != -1) {
             Filter filter = AppRepository.getInstance(getApplicationContext()).getFilter(filterId);
             if (filter != null) {
                 ViewModelProviders.of(this).get(QueuesListViewModel.class).setFilter(filter);
             }
         }
+    }
+
+    private void restoreSort() {
+        SharedPreferences statePref = getPreferences(Context.MODE_PRIVATE);
+        String sortTypeValue = statePref.getString(STATE_SORT_TYPE, "");
+        boolean sortAsc = statePref.getBoolean(STATE_SORT_ASC, false);
         if (!sortTypeValue.isEmpty()) {
             SortTypes sortType = null;
             try {
@@ -137,12 +186,6 @@ public class MainActivity extends AppCompatActivity implements
                 .putString(STATE_SORT_TYPE, sort.getType().name())
                 .putBoolean(STATE_SORT_ASC, sort.getAscending())
                 .apply();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setToolbarTitle(currentPageType);
     }
 
     private void setDrawerProfile(Profile profile) {
@@ -313,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void runSettingsActivity() {
-        startActivity(new Intent(this, SettingsActivity.class));
+        startActivity(new Intent(this, PrefActivity.class));
     }
 
     private void showProfileDialog() {
@@ -331,12 +374,14 @@ public class MainActivity extends AppCompatActivity implements
                 .show(getFragmentManager(), SortDialog.TAG);
     }
 
-    private void updateData() {
+    private void updateData(View view) {
         FragmentManager fm = getSupportFragmentManager();
         try {
             Fragment fragment = fm.findFragmentById(R.id.fragment_layout_place);
             if (fragment != null) {
                 ((UpdatableFragment) fragment).updateData();
+                Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         } catch (Exception e) {
 //            log
@@ -347,12 +392,17 @@ public class MainActivity extends AppCompatActivity implements
         ((ManagementApplication) getApplicationContext()).setProfile(profile);
     }
 
+    private Profile getProfile() {
+        return ((ManagementApplication) getApplicationContext()).getProfile();
+    }
+
     @Override
     public void onProfileSelected(Profile profile, boolean save, boolean saveCredentials) {
+        profile.setStoreCredentials(saveCredentials);
         setProfile(profile);
         setDrawerProfile(profile);
         if (save) {
-            AppRepository.getInstance(getApplicationContext()).insertProfile(profile);
+            profile = AppRepository.getInstance(getApplicationContext()).insertProfile(profile);
         }
         profile.saveCurrent(this);
     }
@@ -363,12 +413,12 @@ public class MainActivity extends AppCompatActivity implements
         try {
             Fragment fragment = fm.findFragmentById(R.id.fragment_layout_place);
             if (fragment != null) {
-                ((QueuesRecyclerFragment) fragment).setQueuesFilter(filter, saveForProfile);
+                filter = ((QueuesRecyclerFragment) fragment).setQueuesFilter(filter, saveForProfile);
             }
+            saveCurrentFilter(filter);
         } catch (Exception e) {
             // log
         }
-        saveCurrentFilter(filter);
     }
 
     @Override

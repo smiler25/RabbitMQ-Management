@@ -22,7 +22,7 @@ public interface ProfileDao {
     Profile findById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Profile profile);
+    long insert(Profile profile);
 
     @Delete
     void delete(Profile profile);
