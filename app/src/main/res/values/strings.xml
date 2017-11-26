@@ -5,53 +5,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync" translatable="false">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency" translatable="false">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>Never</item>
-        <item>10 seconds</item>
-        <item>30 seconds</item>
-        <item>60 seconds</item>
-        <item>5 minutes</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>-1</item>
-        <item>10</item>
-        <item>30</item>
-        <item>60</item>
-        <item>300</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value"/>
-
-    <string name="pref_title_system_sync_settings" translatable="false">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications" translatable="false">Notifications</string>
-
-    <string name="pref_title_new_message_notifications" translatable="false">New message notifications</string>
-
-    <string name="pref_title_ringtone" translatable="false">Ringtone</string>
-    <string name="pref_ringtone_silent" translatable="false">Silent</string>
-
-    <string name="pref_title_vibrate" translatable="false">Vibrate</string>
-    <string name="communicate" translatable="false">Communicate</string>
-    <string name="connect" translatable="false">Connect</string>
-
     <string name="name">Name</string>
     <string name="title">Title</string>
     <string name="value">Value</string>

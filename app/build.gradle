@@ -1,6 +1,18 @@
 apply plugin: 'com.android.application'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
@@ -14,10 +26,22 @@ android {
     }
     buildTypes {
         release {
+            shrinkResources false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            applicationIdSuffix ""
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def fileName = "rmqm-" + variant.versionName + ".apk"
+                    output.outputFileName = new File(fileName)
+//                    output.outputFileName = new File(output.outputFile.parent, fileName)
+                }
+            }
         }
-    }
+        debug {
+            versionNameSuffix '-debug'
+        }    }
 
     packagingOptions {
         exclude 'META-INF/LICENSE'
@@ -33,28 +57,28 @@ ext {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
-    compile "com.android.support.constraint:constraint-layout:1.0.2"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.android.support:support-v4:${supportLibVersion}"
     compile "com.android.support:support-vector-drawable:${supportLibVersion}"
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
-    compile "org.projectlombok:lombok:1.16.18"
-//    compileOnly "org.projectlombok:lombok:1.16.18"
+    compile 'org.projectlombok:lombok:1.16.18'
+    //    compileOnly "org.projectlombok:lombok:1.16.18"
     annotationProcessor "org.projectlombok:lombok:1.16.18"
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
     compile 'com.fasterxml.jackson.core:jackson-core:2.8.5'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.5'
-//    compile "android.arch.lifecycle:extensions:1.0.0"
-    implementation "android.arch.lifecycle:extensions:1.0.0"
-    implementation "android.arch.persistence.room:runtime:1.0.0"
+    //    compile "android.arch.lifecycle:extensions:1.0.0"
+    implementation 'android.arch.lifecycle:extensions:1.0.0'
+    implementation 'android.arch.persistence.room:runtime:1.0.0'
     annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 }
