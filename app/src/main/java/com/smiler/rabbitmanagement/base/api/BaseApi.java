@@ -1,5 +1,6 @@
 package com.smiler.rabbitmanagement.base.api;
 
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
 import com.smiler.rabbitmanagement.VolleyClient;
+import com.smiler.rabbitmanagement.base.AsyncTaskResult;
 import com.smiler.rabbitmanagement.profiles.Profile;
 
 import java.io.IOException;
@@ -62,14 +64,37 @@ public class BaseApi {
         }
 
         ApiRequest request = new ApiRequest(Request.Method.GET, profile.getHost() + path, BaseApi.getHeaders(profile.getAuthKey()),
-                response -> {
-                    try {
-                        callback.onResult((ArrayList<T>) new ObjectMapper().readValue(response, TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, classType)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> callback.onError(error.toString()));
+                response -> new PrepareListTask<T>(callback, classType).execute(response), error -> callback.onError(error.toString()));
 
         VolleyClient.getInstance(context).addToRequestQueue(request);
+    }
+
+    static class PrepareListTask<T> extends AsyncTask<String, Void, AsyncTaskResult> {
+        ApiCallback<ArrayList<T>> callback;
+        Class<T> classType;
+
+        PrepareListTask(ApiCallback<ArrayList<T>> callback, Class<T> classType) {
+            this.callback = callback;
+            this.classType = classType;
+        }
+
+        @Override
+        protected final AsyncTaskResult doInBackground(String... data) {
+            try {
+                return new AsyncTaskResult<>((ArrayList<T>) new ObjectMapper().readValue(data[0], TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, classType)));
+            } catch (IOException e) {
+                return new AsyncTaskResult(e);
+            }
+        }
+        @Override
+        protected void onPostExecute(AsyncTaskResult result) {
+            super.onPostExecute(result);
+            if (result.getResult() != null ) {
+                callback.onResult((ArrayList<T>) result.getResult());
+            } else if (result.getError() != null) {
+//                e.printStackTrace();
+                callback.onError(result.getError().toString());
+            }
+        }
     }
 }

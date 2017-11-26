@@ -1,5 +1,6 @@
 package com.smiler.rabbitmanagement.queues;
 
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
@@ -19,7 +20,6 @@ import lombok.Setter;
 public class QueuesListViewModel extends BaseViewModel<ArrayList<QueueInfo>> {
     @Nullable @Getter @Setter
     private Filter filter;
-
     @Nullable @Getter @Setter
     private Sort sort;
 
@@ -28,7 +28,8 @@ public class QueuesListViewModel extends BaseViewModel<ArrayList<QueueInfo>> {
             @Override
             public void onResult(ArrayList<QueueInfo> result) {
                 if (result != null) {
-                    data.setValue(getSortedData(getFilteredData(result)));
+                    new PrepareTask().execute(result);
+//                    data.setValue(getSortedData(getFilteredData(result)));
                 }
             }
 
@@ -108,6 +109,20 @@ public class QueuesListViewModel extends BaseViewModel<ArrayList<QueueInfo>> {
         sort = newSort;
         if (data.getValue() != null) {
             data.setValue(getSortedData(data.getValue()));
+        }
+    }
+
+    class PrepareTask extends AsyncTask<ArrayList<QueueInfo>, Void, ArrayList<QueueInfo>> {
+        @SafeVarargs
+        @Override
+        protected final ArrayList<QueueInfo> doInBackground(ArrayList<QueueInfo>... data) {
+            return getSortedData(getFilteredData(data[0]));
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<QueueInfo> result) {
+            super.onPostExecute(result);
+            data.setValue(result);
         }
     }
 }

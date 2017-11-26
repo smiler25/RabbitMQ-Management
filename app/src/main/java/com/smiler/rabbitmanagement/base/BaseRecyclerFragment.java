@@ -1,5 +1,6 @@
 package com.smiler.rabbitmanagement.base;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.Toast;
 
 import com.smiler.rabbitmanagement.ManagementApplication;
 import com.smiler.rabbitmanagement.R;
@@ -37,6 +39,7 @@ public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Frag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initModel();
+        initErrorModel();
         if (Preferences.getInstance(getContext()).isLoadOnOpen()) {
             updateData();
         }
@@ -72,6 +75,18 @@ public abstract class BaseRecyclerFragment<T extends BaseViewModel> extends Frag
     abstract public int getHeaderRes();
 
     abstract public void initModel();
+
+    public void initErrorModel() {
+        final Observer<String > observerError = msg -> {
+            if (msg != null) {
+                Toast.makeText(getContext(), String.format(getString(R.string.api_error_overview), msg), Toast.LENGTH_LONG).show();
+            }
+            if (callback != null) {
+                callback.stopLoading();
+            }
+        };
+        dataModel.getError().observe(this, observerError);
+    }
 
     abstract public BaseRecyclerAdapter initAdapter();
 
