@@ -48,6 +48,7 @@ import com.smiler.rabbitmanagement.queues.sort.SortTypes;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.smiler.rabbitmanagement.Constants.STATE_CURRENT_PAGE;
 import static com.smiler.rabbitmanagement.Constants.STATE_FILTER_ID;
 import static com.smiler.rabbitmanagement.Constants.STATE_SORT_ASC;
 import static com.smiler.rabbitmanagement.Constants.STATE_SORT_TYPE;
@@ -98,9 +99,19 @@ public class MainActivity extends AppCompatActivity implements
         preferences.read();
         preferences.setAfterCreate(true);
         restoreState();
-        showFragment(currentPageType);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putSerializable(STATE_CURRENT_PAGE, currentPageType);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentPageType = (PageType) savedInstanceState.getSerializable(STATE_CURRENT_PAGE);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -125,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
         preferences.resetChangeStates();
+        showFragment(currentPageType);
     }
 
     private void restoreState() {
