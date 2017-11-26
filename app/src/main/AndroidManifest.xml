@@ -26,8 +26,14 @@
 
         <activity
             android:name=".preferences.PrefActivity"
-            android:label="@string/settings">
+            android:label="@string/settings"
+            >
         </activity>
+        <activity
+            android:name=".info.PolicyActivity"
+            android:label="@string/policy"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
     </application>
 
 </manifest>

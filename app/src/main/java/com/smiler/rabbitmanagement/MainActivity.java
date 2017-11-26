@@ -32,6 +32,7 @@ import com.smiler.rabbitmanagement.channels.ChannelsRecyclerFragment;
 import com.smiler.rabbitmanagement.connections.ConnectionDetailFragment;
 import com.smiler.rabbitmanagement.connections.ConnectionsRecyclerFragment;
 import com.smiler.rabbitmanagement.detail.QueueDetailFragment;
+import com.smiler.rabbitmanagement.info.PolicyActivity;
 import com.smiler.rabbitmanagement.overview.OverviewFragment;
 import com.smiler.rabbitmanagement.preferences.PrefActivity;
 import com.smiler.rabbitmanagement.preferences.Preferences;
@@ -102,17 +103,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putSerializable(STATE_CURRENT_PAGE, currentPageType);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        currentPageType = (PageType) savedInstanceState.getSerializable(STATE_CURRENT_PAGE);
-    }
-    @Override
     protected void onResume() {
         super.onResume();
         setToolbarTitle(currentPageType);
@@ -137,6 +127,18 @@ public class MainActivity extends AppCompatActivity implements
         }
         preferences.resetChangeStates();
         showFragment(currentPageType);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putSerializable(STATE_CURRENT_PAGE, currentPageType);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentPageType = (PageType) savedInstanceState.getSerializable(STATE_CURRENT_PAGE);
     }
 
     private void restoreState() {
@@ -223,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         switch (currentPageType) {
             case QUEUES:
                 getMenuInflater().inflate(R.menu.queues, menu);
@@ -364,6 +365,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.nav_settings:
                 runSettingsActivity();
                 break;
+            case R.id.nav_policy:
+                runPolicyActivity();
+                break;
         }
         if (type != null) {
             showFragment(type);
@@ -374,6 +378,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private void runSettingsActivity() {
         startActivity(new Intent(this, PrefActivity.class));
+    }
+
+    private void runPolicyActivity() {
+        startActivity(new Intent(this, PolicyActivity.class));
     }
 
     private void showProfileDialog() {

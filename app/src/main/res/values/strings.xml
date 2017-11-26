@@ -165,4 +165,27 @@
     <string name="pref_save_active_filter">Remember active filter</string>
     <string name="pref_save_active_sort">Remember active sort</string>
 
+    <string name="policy_text">
+        Privacy policy\n
+        \n
+        Current version https://www.dropbox.com/s/ofcox96um1t6imp/RMQ_Management.txt?dl=0\n
+        \n
+        Last modified: November 26, 2017\n
+        \n
+        What information we collect\n
+            To use the application, you do not need to create an account.\n
+            The app does not collect any personal information and does not transmit any information to other devices or services.\n
+            The local store contains data related only application functionality.\n
+            No information about the device is not going.\n
+            The required permission (to use the network) is necessary to make api calls.\n
+        \n
+        Changes to this provision on the protection of personal data\n
+        \n
+            We may change this policy from time to time, and if we do we’ll post any changes in the update information in the application and the website that hosts the application. If you continue to use application after those changes are in effect, you agree to the revised policy. If the changes are significant, we may provide more prominent notice or get your consent as required by law.\n
+            \n
+        Contact Information\n
+            Questions, suggestions, comments and reviews about the current state of the protection of personal inform at: kolosmiler@gmail.com.\n
+    </string>
+    <string name="policy">Privacy policy</string>
+
 </resources>
