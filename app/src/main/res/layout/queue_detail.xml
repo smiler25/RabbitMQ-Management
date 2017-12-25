@@ -28,7 +28,7 @@
             android:padding="5dp"
             >
 
-            <com.smiler.rabbitmanagement.views.ValuePanel
+            <com.smiler.rabbitadministration.views.ValuePanel
                 android:id="@+id/qdetail_ready"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 android:layout_gravity="center_horizontal"
                 />
 
-            <com.smiler.rabbitmanagement.views.ValuePanel
+            <com.smiler.rabbitadministration.views.ValuePanel
                 android:id="@+id/qdetail_unacked"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 android:layout_gravity="center_horizontal"
                 />
 
-            <com.smiler.rabbitmanagement.views.ValuePanel
+            <com.smiler.rabbitadministration.views.ValuePanel
                 android:id="@+id/qdetail_total"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

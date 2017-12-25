@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.smiler.rabbitmanagement"
+<manifest package="com.smiler.rabbitadministration"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name=".ManagementApplication"
+        android:name="com.smiler.rabbitadministration.ManagementApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_square_orange"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_circle_orange"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.smiler.rabbitadministration.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -25,12 +25,12 @@
         </activity>
 
         <activity
-            android:name=".preferences.PrefActivity"
+            android:name="com.smiler.rabbitadministration.preferences.PrefActivity"
             android:label="@string/settings"
             >
         </activity>
         <activity
-            android:name=".info.PolicyActivity"
+            android:name="com.smiler.rabbitadministration.info.PolicyActivity"
             android:label="@string/policy"
             android:theme="@style/AppTheme.NoActionBar"
             />

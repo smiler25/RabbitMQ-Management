@@ -69,7 +69,7 @@
     <string name="policy_text">
         Политика конфиденциальности\n
         \n
-        Актуальная версия https://www.dropbox.com/s/qvypgo8fhalqpdm/RMQ_Management-ru.txt?dl=0\n
+        Актуальная версия https://www.dropbox.com/s/qvypgo8fhalqpdm/AdministrationForRabbitMQ-ru.txt?dl=0\n
         \n
         Дата последнего изменения: 26 ноября 2017 г.\n
         \n
@@ -88,5 +88,7 @@
             Вопросы, предложения, замечания и отзыва о настоящем положении о защите персональных сообщайте по адресу: kolosmiler@gmail.com.\n
     </string>
     <string name="policy">Политика конфиденциальности</string>
+    <string name="connections">Соединения</string>
+    <string name="channels">Каналы</string>
 
 </resources>
