@@ -1,6 +1,7 @@
 package com.smiler.rabbitadministration.base.api;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -9,6 +10,10 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Map;
+
+import static com.smiler.rabbitadministration.Constants.REQUEST_BACKOFF_MULT;
+import static com.smiler.rabbitadministration.Constants.REQUEST_MAX_RETRIES;
+import static com.smiler.rabbitadministration.Constants.REQUEST_TIMEOUT_MS;
 
 public class ApiRequest extends Request<String> {
     private final Response.Listener<String> mListener;
@@ -20,11 +25,7 @@ public class ApiRequest extends Request<String> {
         super(method, url, errorListener);
         mListener = listener;
         this.headers = headers;
-    }
-
-    public ApiRequest(String url, Map<String, String> headers,
-                      Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        this(Method.GET, url, headers, listener, errorListener);
+        setRetryPolicy(new DefaultRetryPolicy(REQUEST_TIMEOUT_MS, REQUEST_MAX_RETRIES, REQUEST_BACKOFF_MULT));
     }
 
     @Override

@@ -9,6 +9,6 @@ import java.util.ArrayList;
 
 class QueuesListApi {
     static void getList(ManagementApplication context, final BaseApi.ApiCallback<ArrayList<QueueInfo>> callback) {
-        BaseApi.requestList(context, callback, RequestPath.QUEUES_LIST, QueueInfo.class);
+        BaseApi.getList(context, callback, RequestPath.QUEUES_LIST, QueueInfo.class);
     }
 }

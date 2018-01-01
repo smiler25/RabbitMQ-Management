@@ -8,6 +8,6 @@ import java.util.ArrayList;
 
 class ConnectionsApi {
     static void getList(ManagementApplication context, final BaseApi.ApiCallback<ArrayList<Connection>> callback) {
-        BaseApi.requestList(context, callback, RequestPath.CONNECTIONS, Connection.class);
+        BaseApi.getList(context, callback, RequestPath.CONNECTIONS, Connection.class);
     }
 }

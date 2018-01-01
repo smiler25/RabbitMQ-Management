@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.smiler.rabbitadministration.ManagementApplication;
 import com.smiler.rabbitadministration.R;
@@ -17,6 +18,7 @@ import com.smiler.rabbitadministration.base.TableRowValue;
 import com.smiler.rabbitadministration.base.interfaces.FragmentListListener;
 import com.smiler.rabbitadministration.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitadministration.base.interfaces.UpdatableFragmentListener;
+import com.smiler.rabbitadministration.common.ActionTypes;
 import com.smiler.rabbitadministration.views.ValuePanel;
 import com.smiler.rabbitadministration.views.ValuesTable;
 
@@ -33,7 +35,7 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> implements Up
 
     @Setter @Nullable
     protected UpdatableFragmentListener callback;
-    @Setter
+    @Setter @Nullable
     private QueueInfo data;
 
     private QueueDetailViewModel dataModel;
@@ -75,14 +77,31 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> implements Up
         panelUnacked.setTitle(getString(R.string.unacked));
         panelTotal.setTitle(getString(R.string.total));
         dataModel = ViewModelProviders.of(this).get(QueueDetailViewModel.class);
-
+        if (data != null) {
+            dataModel.setData(data);
+        }
         final Observer<QueueInfo> observer = data -> {
             if (data != null) {
                 setView(data);
             }
         };
+        final Observer<ActionTypes> observerAction = data -> {
+            if (data != null && callback != null) {
+                callback.handleAction(data);
+            }
+        };
+        final Observer<String > observerError = msg -> {
+            if (msg != null) {
+                Toast.makeText(getContext(), String.format(getString(R.string.api_error_queue_detail), msg), Toast.LENGTH_LONG).show();
+            }
+            if (callback != null) {
+                callback.stopLoading();
+            }
+        };
         dataModel.getModel().observe(this, observer);
-//        updateData();
+        dataModel.getAction().observe(this, observerAction);
+        dataModel.getError().observe(this, observerError);
+        // updateData();
         setView(data);
         return root;
     }
@@ -112,4 +131,19 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> implements Up
 
     }
 
+    public String getQueueName() {
+        return dataModel.getName();
+    }
+
+    public void purgeQueue() {
+        dataModel.purge((ManagementApplication) getContext().getApplicationContext());
+    }
+
+    public void deleteQueue() {
+        dataModel.delete((ManagementApplication) getContext().getApplicationContext());
+    }
+
+//    public void moveQueue(String newVhost, String newName) {
+//        dataModel.move((ManagementApplication) getContext().getApplicationContext());
+//    }
 }

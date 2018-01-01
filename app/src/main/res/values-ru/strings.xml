@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">Администрирование для RabbitMQ</string>
     <string name="overview">Обзор</string>
     <string name="queues">Очереди</string>
     <string name="settings">Настройки</string>
@@ -19,7 +20,7 @@
     <string name="select">Выбрать</string>
     <string name="current_profile">Профиль: %s</string>
     <string name="api_error_queues">Ошибка при получении списка очередей (%s)</string>
-    <string name="api_error_overview">Ошибка получения общей информации (%s)</string>
+    <string name="api_error_overview">Ошибка общей информации (%s)</string>
     <string name="profile_null">Не выбран профиль</string>
     <string name="update_in_progress">Данные обновляются</string>
     <string name="host">Хост</string>
@@ -34,6 +35,9 @@
     <string name="api_error_connections">Ошибка при получении соединений (%s)</string>
     <string name="api_error_channels">Ошибка при получении списка каналов (%s)</string>
     <string name="state">Статус</string>
+    <string name="purge">Очистить</string>
+    <string name="delete">Удалить</string>
+    <string name="move_messages">Переместить сообщения</string>
     <string name="order">Сортировка</string>
     <string name="sort_enable">Включить сортировку</string>
     <string name="sort_queues">Фильтр очередей</string>
@@ -53,6 +57,7 @@
     <string name="product">Продукт</string>
     <string name="information">Информация</string>
     <string name="confirm">Подтверждение</string>
+    <string name="confirm_action">Подтвердите действие</string>
     <string name="transactional">Транзакционный</string>
     <string name="protocol">Протокол</string>
     <string name="connected_at">Подключен</string>
@@ -90,5 +95,9 @@
     <string name="policy">Политика конфиденциальности</string>
     <string name="connections">Соединения</string>
     <string name="channels">Каналы</string>
+    <string name="api_error_queue_detail">Ошибка api очереди (%s)</string>
+
+    <string name="confirm_delete_queue">Удалить очередь: %s</string>
+    <string name="confirm_purge_queue">Очистить очередь: %s</string>
 
 </resources>

@@ -8,6 +8,6 @@ import java.util.ArrayList;
 
 class ChannelsApi {
     static void getList(ManagementApplication context, final BaseApi.ApiCallback<ArrayList<Channel>> callback) {
-        BaseApi.requestList(context, callback, RequestPath.CHANNELS, Channel.class);
+        BaseApi.getList(context, callback, RequestPath.CHANNELS, Channel.class);
     }
 }

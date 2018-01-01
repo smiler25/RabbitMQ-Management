@@ -30,8 +30,8 @@ public class BaseApi {
         }};
     }
 
-    public static <T> void requestObject(ManagementApplication context, final ApiCallback<T> callback,
-                                         String path, final Class<T> classType) {
+    public static <T> void getObject(ManagementApplication context, final ApiCallback<T> callback,
+                                     String path, final Class<T> classType) {
         Profile profile = context.getProfile();
         if (profile == null) {
             callback.onError(context.getString(R.string.profile_null));
@@ -50,8 +50,8 @@ public class BaseApi {
         VolleyClient.getInstance(context).addToRequestQueue(request);
     }
 
-    public static <T> void requestList(ManagementApplication context, final ApiCallback<ArrayList<T>> callback,
-                                       String path, final Class<T> classType) {
+    public static <T> void getList(ManagementApplication context, final ApiCallback<ArrayList<T>> callback,
+                                   String path, final Class<T> classType) {
         Profile profile = context.getProfile();
         if (profile == null) {
             callback.onError(context.getString(R.string.profile_null));
@@ -68,6 +68,22 @@ public class BaseApi {
 
         VolleyClient.getInstance(context).addToRequestQueue(request);
     }
+
+    public static <T> void delete(ManagementApplication context, final ApiCallback<Boolean> callback,
+                                  String path, final Class<T> classType) {
+        Profile profile = context.getProfile();
+        if (profile == null) {
+            callback.onError(context.getString(R.string.profile_null));
+            return;
+        }
+
+        ApiRequest request = new ApiRequest(Request.Method.DELETE, profile.getHost() + path, BaseApi.getHeaders(profile.getAuthKey()),
+                response -> callback.onResult(true),
+                error -> callback.onError(error.toString()));
+
+        VolleyClient.getInstance(context).addToRequestQueue(request);
+    }
+
 
     static class PrepareListTask<T> extends AsyncTask<String, Void, AsyncTaskResult> {
         ApiCallback<ArrayList<T>> callback;

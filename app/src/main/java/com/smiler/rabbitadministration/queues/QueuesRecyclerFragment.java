@@ -47,7 +47,7 @@ public class QueuesRecyclerFragment extends BaseRecyclerFragment<QueuesListViewM
         adapter = new QueuesRecyclerAdapter();
         adapter.setListener(obj -> {
             if (listener != null) {
-                listener.onListElementClick(PageType.QUEUES, obj);
+                listener.onListElementClick(PageType.QUEUE_DETAIL, obj);
             }
         });
         return adapter;

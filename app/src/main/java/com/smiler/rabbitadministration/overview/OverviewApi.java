@@ -6,6 +6,6 @@ import com.smiler.rabbitadministration.base.api.RequestPath;
 
 class OverviewApi {
     static void getInfo(ManagementApplication context, final BaseApi.ApiCallback<Overview> callback) {
-        BaseApi.requestObject(context, callback, RequestPath.OVERVIEW, Overview.class);
+        BaseApi.getObject(context, callback, RequestPath.OVERVIEW, Overview.class);
     }
 }

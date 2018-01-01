@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smiler.rabbitadministration.base.AndroidUtils;
 import com.smiler.rabbitadministration.base.DetailFragment;
@@ -29,6 +29,8 @@ import com.smiler.rabbitadministration.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitadministration.base.interfaces.UpdatableFragmentListener;
 import com.smiler.rabbitadministration.channels.ChannelDetailFragment;
 import com.smiler.rabbitadministration.channels.ChannelsRecyclerFragment;
+import com.smiler.rabbitadministration.common.ActionTypes;
+import com.smiler.rabbitadministration.common.ConfirmDialog;
 import com.smiler.rabbitadministration.connections.ConnectionDetailFragment;
 import com.smiler.rabbitadministration.connections.ConnectionsRecyclerFragment;
 import com.smiler.rabbitadministration.detail.QueueDetailFragment;
@@ -53,10 +55,12 @@ import static com.smiler.rabbitadministration.Constants.STATE_CURRENT_PAGE;
 import static com.smiler.rabbitadministration.Constants.STATE_FILTER_ID;
 import static com.smiler.rabbitadministration.Constants.STATE_SORT_ASC;
 import static com.smiler.rabbitadministration.Constants.STATE_SORT_TYPE;
+import static com.smiler.rabbitadministration.Constants.TAG_FRAGMENT_CONFIRM;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         ProfileSelector.ProfileSelectorListener,
+        ConfirmDialog.ConfirmDialogListener,
         FilterDialog.FilterDialogListener,
         SortDialog.OrderDialogListener,
         FragmentListListener,
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(this::updateData);
+        fab.setOnClickListener(v -> updateData());
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -216,7 +220,19 @@ public class MainActivity extends AppCompatActivity implements
             drawer.closeDrawer(GravityCompat.START);
         } else {
             if (detailAdded) {
+                switch (currentPageType) {
+                    case QUEUE_DETAIL:
+                        currentPageType = PageType.QUEUES;
+                        break;
+                    case CONNECTION_DETAIL:
+                        currentPageType = PageType.CONNECTIONS;
+                        break;
+                    case CHANNEL_DETAIL:
+                        currentPageType = PageType.CHANNELS;
+                        break;
+                }
                 setToolbarTitle(currentPageType);
+                invalidateOptionsMenu();
                 detailAdded = false;
             }
             super.onBackPressed();
@@ -228,6 +244,9 @@ public class MainActivity extends AppCompatActivity implements
         switch (currentPageType) {
             case QUEUES:
                 getMenuInflater().inflate(R.menu.queues, menu);
+                break;
+            case QUEUE_DETAIL:
+                getMenuInflater().inflate(R.menu.queue_detail, menu);
                 break;
             default:
                 getMenuInflater().inflate(R.menu.main, menu);
@@ -248,12 +267,21 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_sort:
                 showSortDialog();
                 return true;
+            case R.id.action_queue_purge:
+                askActionQueue(ActionTypes.QUEUE_PURGE);
+                return true;
+            case R.id.action_queue_delete:
+                askActionQueue(ActionTypes.QUEUE_DELETE);
+                return true;
+            case R.id.action_queue_move:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void showFragment(PageType type) {
+        currentPageType = type;
         Fragment fragment = null;
         String tag = "";
         int titleRes = R.string.app_name;
@@ -264,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements
                 titleRes = R.string.overview;
                 break;
             case QUEUES:
+            case QUEUE_DETAIL:
                 fragment = QueuesRecyclerFragment.newInstance();
                 tag = QueuesRecyclerFragment.TAG;
                 titleRes = R.string.queues;
@@ -280,6 +309,9 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
         }
+        if (fragment == null) {
+            return;
+        }
         ((UpdatableFragment) fragment).setListener(this);
         ((UpdatableFragment) fragment).setCallback(this);
         fragment.setRetainInstance(true);
@@ -288,7 +320,6 @@ public class MainActivity extends AppCompatActivity implements
                 .replace(R.id.fragment_layout_place, fragment, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
-        currentPageType = type;
         toolbar.setTitle(titleRes);
         invalidateOptionsMenu();
     }
@@ -300,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements
                 titleRes = R.string.overview;
                 break;
             case QUEUES:
+            case QUEUE_DETAIL:
                 titleRes = R.string.queues;
                 break;
             case CONNECTIONS:
@@ -315,9 +347,10 @@ public class MainActivity extends AppCompatActivity implements
     private void showDetails(PageType type, Object data) {
         DetailFragment fragment = null;
         String tag = "";
+        currentPageType = type;
 
         switch (type) {
-            case QUEUES:
+            case QUEUE_DETAIL:
                 fragment = QueueDetailFragment.newInstance();
                 tag = QueueDetailFragment.TAG;
                 break;
@@ -334,8 +367,8 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
 
-        fragment.setData(data);
         fragment.setRetainInstance(true);
+        fragment.setCallback(this);
 //        fragment.setListener(this);
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack(tag)
@@ -343,7 +376,8 @@ public class MainActivity extends AppCompatActivity implements
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
         detailAdded = true;
-//        invalidateOptionsMenu();
+        fragment.setData(data);
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -399,13 +433,15 @@ public class MainActivity extends AppCompatActivity implements
                 .show(getFragmentManager(), SortDialog.TAG);
     }
 
-    private void updateData(View view) {
+    private void updateData() {
         FragmentManager fm = getSupportFragmentManager();
         try {
             Fragment fragment = fm.findFragmentById(R.id.fragment_layout_place);
             if (fragment != null) {
                 ((UpdatableFragment) fragment).updateData();
-                Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG).show();
+//                if (view != null) {
+//                    Snackbar.make(view, R.string.update_in_progress, Snackbar.LENGTH_LONG).show();
+//                }
             }
         } catch (Exception e) {
 //            log
@@ -480,5 +516,92 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void stopLoading() {
         hideLoaderView();
+    }
+
+    @Override
+    public void handleAction(ActionTypes action) {
+        switch (action) {
+            case QUEUE_DELETE:
+                if (detailAdded && currentPageType == PageType.QUEUE_DETAIL) {
+                    getSupportFragmentManager().popBackStack();
+                }
+                showFragment(PageType.QUEUES);
+                break;
+            case QUEUE_PURGE:
+                updateData();
+                break;
+            case QUEUE_MOVE:
+                break;
+        }
+    }
+
+    @Override
+    public void onConfirmDialogPositive(ActionTypes type) {
+        switch (type) {
+            case QUEUE_DELETE:
+                deleteQueue();
+                break;
+            case QUEUE_PURGE:
+                purgeQueue();
+                break;
+            case QUEUE_MOVE:
+                break;
+        }
+    }
+
+    @Override
+    public void onConfirmDialogNegative(ActionTypes type) {
+
+    }
+
+    private QueueDetailFragment getQueueDetailFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(QueueDetailFragment.TAG);
+        if (fragment == null) {
+            Toast.makeText(this, String.format(getString(R.string.api_error_queue_detail), ""), Toast.LENGTH_LONG).show();
+            return null;
+        }
+        try {
+            return (QueueDetailFragment) fragment;
+        } catch (ClassCastException e) {
+            Toast.makeText(this, String.format(getString(R.string.api_error_queue_detail), ""), Toast.LENGTH_LONG).show();
+            return null;
+        }
+    }
+
+    private void askActionQueue(ActionTypes type) {
+        QueueDetailFragment fragment = getQueueDetailFragment();
+        if (fragment == null) {
+            return;
+        }
+        String qname = fragment.getQueueName();
+        if (qname == null || qname.isEmpty()) {
+            Toast.makeText(this, String.format(getString(R.string.api_error_queue_detail), "queue not defined"), Toast.LENGTH_LONG).show();
+            return;
+        }
+        ConfirmDialog.newInstance(type).setListener(this).setQueueName(qname).show(getFragmentManager(), TAG_FRAGMENT_CONFIRM);
+    }
+
+    private void deleteQueue() {
+        QueueDetailFragment fragment = getQueueDetailFragment();
+        if (fragment == null) {
+            return;
+        }
+        fragment.deleteQueue();
+    }
+
+    private void purgeQueue() {
+        QueueDetailFragment fragment = getQueueDetailFragment();
+        if (fragment == null) {
+            return;
+        }
+        fragment.purgeQueue();
+    }
+
+    private void updateQueueInfo() {
+        QueueDetailFragment fragment = getQueueDetailFragment();
+        if (fragment == null) {
+            return;
+        }
+        fragment.purgeQueue();
     }
 }
