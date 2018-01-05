@@ -7,4 +7,6 @@
     <color name="loader">#4CAF50</color>
     <color name="listOdd">#FFFFFF</color>
     <color name="listEven">#FFF3E0</color>
+
+    <color name="light_grey_background">#eeeeee</color>
 </resources>

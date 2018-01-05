@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import lombok.Data;
@@ -28,7 +29,7 @@ public class Profile {
     public String password;
     public String authKey;
 
-    @Ignore
+    @Ignore @Nullable
     private Boolean storeCredentials;
 
     public Profile(String title, String host, String login, String password) {
@@ -57,12 +58,6 @@ public class Profile {
         return Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
     }
 
-    private Profile(String title, String host, String authKey) {
-        this.title = title;
-        this.host = host;
-        this.authKey = authKey;
-    }
-
     public void saveCurrent(Activity activity) {
         activity.getPreferences(Context.MODE_PRIVATE).edit().putInt(STATE_PROFILE_ID, id).apply();
     }
@@ -72,4 +67,9 @@ public class Profile {
         return statePref.getInt(STATE_PROFILE_ID, -1);
     }
 
+    public boolean check() {
+        return title != null && !title.isEmpty() &&
+                host != null && !host.isEmpty() &&
+                login != null && !login.isEmpty();
+    }
 }

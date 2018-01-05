@@ -3,6 +3,7 @@ package com.smiler.rabbitadministration.detail;
 import com.smiler.rabbitadministration.ManagementApplication;
 import com.smiler.rabbitadministration.base.BaseViewModel;
 import com.smiler.rabbitadministration.base.api.BaseApi;
+import com.smiler.rabbitadministration.common.ActionInfo;
 import com.smiler.rabbitadministration.common.ActionTypes;
 
 import lombok.Getter;
@@ -39,7 +40,7 @@ public class QueueDetailViewModel extends BaseViewModel<QueueInfo> {
         QueueApi.purge(context, vhost, name, new BaseApi.ApiCallback<Boolean>() {
             @Override
             public void onResult(Boolean result) {
-                action.setValue(ActionTypes.QUEUE_PURGE);
+                action.setValue(new ActionInfo(ActionTypes.QUEUE_PURGE, name));
             }
             @Override
             public void onError(String msg) {
@@ -51,7 +52,9 @@ public class QueueDetailViewModel extends BaseViewModel<QueueInfo> {
     void delete(ManagementApplication context) {
         QueueApi.delete(context, vhost, name, new BaseApi.ApiCallback<Boolean>() {
             @Override
-            public void onResult(Boolean result) {action.setValue(ActionTypes.QUEUE_DELETE);}
+            public void onResult(Boolean result) {
+                action.setValue(new ActionInfo(ActionTypes.QUEUE_DELETE, name));
+            }
             @Override
             public void onError(String msg) {errorMessage.setValue(msg);}
         });

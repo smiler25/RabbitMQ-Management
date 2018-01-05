@@ -18,7 +18,7 @@ import com.smiler.rabbitadministration.base.TableRowValue;
 import com.smiler.rabbitadministration.base.interfaces.FragmentListListener;
 import com.smiler.rabbitadministration.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitadministration.base.interfaces.UpdatableFragmentListener;
-import com.smiler.rabbitadministration.common.ActionTypes;
+import com.smiler.rabbitadministration.common.ActionInfo;
 import com.smiler.rabbitadministration.views.ValuePanel;
 import com.smiler.rabbitadministration.views.ValuesTable;
 
@@ -85,7 +85,7 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> implements Up
                 setView(data);
             }
         };
-        final Observer<ActionTypes> observerAction = data -> {
+        final Observer<ActionInfo> observerAction = data -> {
             if (data != null && callback != null) {
                 callback.handleAction(data);
             }

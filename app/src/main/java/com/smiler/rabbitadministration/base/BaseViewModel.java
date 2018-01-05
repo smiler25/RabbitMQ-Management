@@ -4,12 +4,12 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.smiler.rabbitadministration.ManagementApplication;
-import com.smiler.rabbitadministration.common.ActionTypes;
+import com.smiler.rabbitadministration.common.ActionInfo;
 
 public abstract class BaseViewModel<T> extends ViewModel {
     protected MutableLiveData<T> data;
     protected MutableLiveData<String> errorMessage;
-    protected MutableLiveData<ActionTypes> action;
+    protected MutableLiveData<ActionInfo> action;
 
     public MutableLiveData<T> getModel() {
         if (data == null) {
@@ -25,7 +25,7 @@ public abstract class BaseViewModel<T> extends ViewModel {
         return errorMessage;
     }
 
-    public MutableLiveData<ActionTypes> getAction() {
+    public MutableLiveData<ActionInfo> getAction() {
         if (action == null) {
             action = new MutableLiveData<>();
         }

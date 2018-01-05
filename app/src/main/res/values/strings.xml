@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Administration for RabbitMQ</string>
     <string name="settings">Settings</string>
+    <string name="profiles">Profiles</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -8,6 +9,7 @@
     <string name="name">Name</string>
     <string name="title">Title</string>
     <string name="value">Value</string>
+    <string name="create">Create</string>
 
     <string name="overview">Overview</string>
     <string name="queues">Queues</string>
@@ -53,6 +55,11 @@
     <string name="purge">Purge</string>
     <string name="delete">Delete</string>
     <string name="order">Order</string>
+    <string name="create_success">Created (%s)</string>
+    <string name="update_success">Updated (%s)</string>
+    <string name="delete_success">Deleted (%s)</string>
+    <string name="move_success">Moved (%s)</string>
+
     <string name="sort_enable">Enable sorting</string>
     <string name="sort_queues">Filter queues</string>
     <string name="sort_by_name">By name</string>
@@ -148,5 +155,9 @@
             Questions, suggestions, comments and reviews about the current state of the protection of personal inform at: kolosmiler@gmail.com.\n
     </string>
     <string name="policy">Privacy policy</string>
+    <string name="edit_profile_dialog_title_required">Title required</string>
+    <string name="error_occurred">An error occurred</string>
+    <string name="profile_save_error">Unable to save. Specify title, host and login</string>
+    <string name="purge_success">Purged (%s)</string>
 
 </resources>

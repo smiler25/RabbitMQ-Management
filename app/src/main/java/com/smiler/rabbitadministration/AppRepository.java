@@ -1,6 +1,5 @@
 package com.smiler.rabbitadministration;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
@@ -26,22 +25,10 @@ public class AppRepository {
     }
 
     public Profile insertProfile(Profile profile) {
-        if (!profile.getStoreCredentials()) {
+        if (profile.getStoreCredentials() == null || !profile.getStoreCredentials()) {
             profile = new Profile(profile, false);
         }
         return db.profileDao().findById((int) db.profileDao().insert(profile));
-    }
-
-//    public int insertFilter(Filter filter) {
-//        return (int) db.filterDao().insert(filter);
-//    }
-
-    public Filter insertFilter(Filter filter) {
-        return db.filterDao().findById((int) db.filterDao().insert(filter));
-    }
-
-    public LiveData<List<Profile>> getAllProfiles() {
-        return db.profileDao().getAll();
     }
 
     public Profile getProfile(int id) {
@@ -50,6 +37,18 @@ public class AppRepository {
 
     public List<Profile> getAllProfilesSync() {
         return db.profileDao().getAllSync();
+    }
+
+    public void deleteProfile(Profile profile) {
+        db.profileDao().delete(profile);
+    }
+
+    public void updateProfile(Profile profile) {
+        db.profileDao().update(profile);
+    }
+
+    public Filter insertFilter(Filter filter) {
+        return db.filterDao().findById((int) db.filterDao().insert(filter));
     }
 
     public List<Filter> getAllFiltersSync() {

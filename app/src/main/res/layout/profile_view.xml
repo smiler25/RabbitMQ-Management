@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:paddingStart="8dp"
     android:paddingEnd="8dp"
+    android:background="@color/light_grey_background"
     >
-    <!--android:background="@color/light_grey_background"-->
 
     <LinearLayout
         android:id="@+id/container"
@@ -22,12 +22,17 @@
         >
 
         <TextView
-            android:id="@+id/detail_scroll_view_title"
+            android:id="@+id/profile_view_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:layout_gravity="center_horizontal"
             />
+
+        <com.smiler.rabbitadministration.profiles.ProfileFormView
+            android:id="@+id/profile_edit_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </ScrollView>

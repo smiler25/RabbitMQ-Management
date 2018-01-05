@@ -3,6 +3,7 @@
     <string name="overview">Обзор</string>
     <string name="queues">Очереди</string>
     <string name="settings">Настройки</string>
+    <string name="create">Создать</string>
 
     <string name="total">Всего</string>
     <string name="unacked">В обработке</string>
@@ -99,5 +100,14 @@
 
     <string name="confirm_delete_queue">Удалить очередь: %s</string>
     <string name="confirm_purge_queue">Очистить очередь: %s</string>
+    <string name="profiles">Профили</string>
+    <string name="edit_profile_dialog_title_required">Название обязательно</string>
+    <string name="profile_save_error">Невозможно сохранить. Заполните название, хост и логин</string>
+    <string name="purge_success">Очищено (%s)</string>
+    <string name="delete_success">Удалено (%s)</string>
+    <string name="move_success">Перепещено (%s)</string>
+    <string name="error_occurred">Возникла ошибка</string>
+    <string name="create_success">Создано (%s)</string>
+    <string name="update_success">Обновлено (%s)</string>
 
 </resources>

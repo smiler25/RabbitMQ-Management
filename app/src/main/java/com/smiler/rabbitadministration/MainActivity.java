@@ -29,6 +29,7 @@ import com.smiler.rabbitadministration.base.interfaces.UpdatableFragment;
 import com.smiler.rabbitadministration.base.interfaces.UpdatableFragmentListener;
 import com.smiler.rabbitadministration.channels.ChannelDetailFragment;
 import com.smiler.rabbitadministration.channels.ChannelsRecyclerFragment;
+import com.smiler.rabbitadministration.common.ActionInfo;
 import com.smiler.rabbitadministration.common.ActionTypes;
 import com.smiler.rabbitadministration.common.ConfirmDialog;
 import com.smiler.rabbitadministration.connections.ConnectionDetailFragment;
@@ -40,6 +41,7 @@ import com.smiler.rabbitadministration.preferences.PrefActivity;
 import com.smiler.rabbitadministration.preferences.Preferences;
 import com.smiler.rabbitadministration.profiles.Profile;
 import com.smiler.rabbitadministration.profiles.ProfileSelector;
+import com.smiler.rabbitadministration.profiles.ProfilesActivity;
 import com.smiler.rabbitadministration.queues.QueuesListViewModel;
 import com.smiler.rabbitadministration.queues.QueuesRecyclerFragment;
 import com.smiler.rabbitadministration.queues.filter.Filter;
@@ -396,6 +398,9 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.nav_channels:
                 type = PageType.CHANNELS;
                 break;
+            case R.id.nav_profiles:
+                runProfilesActivity();
+                break;
             case R.id.nav_settings:
                 runSettingsActivity();
                 break;
@@ -412,6 +417,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private void runSettingsActivity() {
         startActivity(new Intent(this, PrefActivity.class));
+    }
+
+    private void runProfilesActivity() {
+        startActivity(new Intent(this, ProfilesActivity.class));
     }
 
     private void runPolicyActivity() {
@@ -519,19 +528,26 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void handleAction(ActionTypes action) {
-        switch (action) {
+    public void handleAction(ActionInfo actionInfo) {
+        String msg = null;
+        switch (actionInfo.getAction()) {
             case QUEUE_DELETE:
                 if (detailAdded && currentPageType == PageType.QUEUE_DETAIL) {
                     getSupportFragmentManager().popBackStack();
                 }
                 showFragment(PageType.QUEUES);
+                msg = String.format(getString(R.string.delete_success), actionInfo.getText());
                 break;
             case QUEUE_PURGE:
                 updateData();
+                msg = String.format(getString(R.string.purge_success), actionInfo.getText());
                 break;
             case QUEUE_MOVE:
+                msg = String.format(getString(R.string.move_success), actionInfo.getText());
                 break;
+        }
+        if (msg != null) {
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         }
     }
 

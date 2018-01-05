@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.smiler.rabbitadministration.R;
@@ -30,17 +29,10 @@ public class ProfileSelector extends DialogFragment {
     @Accessors(chain = true) @Setter @Nullable
     private ProfileSelectorListener listener;
 
-    @BindView(R.id.profile_title)
-    EditText title;
-    @BindView(R.id.profile_host)
-    EditText host;
-    @BindView(R.id.profile_login)
-    EditText login;
-    @BindView(R.id.profile_password)
-    EditText password;
+    @BindView(R.id.profile_edit_form)
+    ProfileFormView profileFormView;
     @BindView(R.id.profile_save_credentials)
     CheckBox saveCredentials;
-
     @BindView(R.id.profile_select)
     Button profileSelector;
     @BindView(R.id.profile_select_apply)
@@ -58,7 +50,7 @@ public class ProfileSelector extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.profile_edit, null);
+        View v = inflater.inflate(R.layout.profile_edit_dialog, null);
         ButterKnife.bind(this, v);
 
         profileSelector.setOnClickListener(v1 -> ProfilesListDialog.newInstance()
@@ -82,7 +74,7 @@ public class ProfileSelector extends DialogFragment {
                 .setPositiveButton(R.string.apply_save, (dialog, which) -> {
                     if (listener != null) {
                         listener.onProfileSelected(
-                                new Profile(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString()),
+                                profileFormView.getFilledProfile(),
                                 true,
                                 saveCredentials.isChecked());
                     }
@@ -90,7 +82,7 @@ public class ProfileSelector extends DialogFragment {
                 .setNegativeButton(R.string.apply, (dialog, which) -> {
                     if (listener != null) {
                         listener.onProfileSelected(
-                                new Profile(title.getText().toString(), host.getText().toString(), login.getText().toString(), password.getText().toString()),
+                                profileFormView.getFilledProfile(),
                                 false,
                                 saveCredentials.isChecked());
                     }
@@ -100,9 +92,7 @@ public class ProfileSelector extends DialogFragment {
     }
 
     private void setSelectedProfile(Profile profile) {
-        title.setText(profile.getTitle());
-        host.setText(profile.getHost());
-        login.setText(profile.getLogin());
+        profileFormView.setProfile(profile);
         selectedProfile = profile;
         profileSelectorApply.setText(String.format(getString(R.string.apply_selected), profile.getTitle()));
         profileSelectorApply.setVisibility(View.VISIBLE);

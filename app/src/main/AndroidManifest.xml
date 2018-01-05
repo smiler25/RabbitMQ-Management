@@ -19,7 +19,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -27,12 +26,16 @@
         <activity
             android:name="com.smiler.rabbitadministration.preferences.PrefActivity"
             android:label="@string/settings"
-            >
-        </activity>
+            />
         <activity
             android:name="com.smiler.rabbitadministration.info.PolicyActivity"
             android:label="@string/policy"
             android:theme="@style/AppTheme.NoActionBar"
+            />
+        <activity
+            android:name=".profiles.ProfilesActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/profiles"
             />
     </application>
 
