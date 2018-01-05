@@ -14,6 +14,7 @@ public final class Constants {
     static final String STATE_FILTER_ID = "FILTER_ID";
     static final String STATE_SORT_TYPE = "SORT_TYPE";
     static final String STATE_SORT_ASC = "SORT_ASC";
+    public static final String AMQP_URL_FORMAT = "amqp:///%s";
 
     public static final int REQUEST_TIMEOUT_MS = 10000;
     public static final int REQUEST_MAX_RETRIES = 3;

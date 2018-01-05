@@ -60,16 +60,16 @@ public class QueueDetailViewModel extends BaseViewModel<QueueInfo> {
         });
     }
 
-//    void move(ManagementApplication context, String newVhost, String newName) {
-//        QueueApi.moveMessages(context, vhost, name, newVhost, newName, new BaseApi.ApiCallback<Boolean>() {
-//            @Override
-//            public void onResult(Boolean result) {
-//            }
-//            @Override
-//            public void onError(String msg) {
-//                        errorMessage.setValue(msg);
-//                    }
-//        });
-//    }
-
+    void move(ManagementApplication context, String targetName) {
+        QueueApi.moveMessages(context, vhost, name, vhost, targetName, new BaseApi.ApiCallback<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                action.setValue(new ActionInfo(ActionTypes.QUEUE_MOVE, String.format("%s -> %s", name, targetName)));
+            }
+            @Override
+            public void onError(String msg) {
+                errorMessage.setValue(msg);
+            }
+        });
+    }
 }

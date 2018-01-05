@@ -39,6 +39,9 @@
     <string name="purge">Очистить</string>
     <string name="delete">Удалить</string>
     <string name="move_messages">Переместить сообщения</string>
+    <string name="move_messages_dialog_text">Введите название очереди, в которую надо переместить сообщения из выбранной очереди: %s</string>
+    <string name="move_messages_empty_value">Ошибка: не указано название очереди</string>
+    <string name="target_queue">Целевая очередь</string>
     <string name="order">Сортировка</string>
     <string name="sort_enable">Включить сортировку</string>
     <string name="sort_queues">Фильтр очередей</string>

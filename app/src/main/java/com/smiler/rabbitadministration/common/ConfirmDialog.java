@@ -16,6 +16,7 @@ import lombok.experimental.Accessors;
 public class ConfirmDialog extends DialogFragment implements DialogInterface.OnClickListener {
     private static String argType = "type";
     private ActionTypes type;
+    @Setter @Accessors(chain = true)
     private String queueName;
 
     @Setter @Accessors(chain = true) @Nullable
@@ -27,11 +28,6 @@ public class ConfirmDialog extends DialogFragment implements DialogInterface.OnC
         args.putSerializable(argType, type);
         f.setArguments(args);
         return f;
-    }
-
-    public ConfirmDialog setQueueName(String name) {
-        queueName = name;
-        return this;
     }
 
     @Override
@@ -63,7 +59,6 @@ public class ConfirmDialog extends DialogFragment implements DialogInterface.OnC
 
     public interface ConfirmDialogListener {
         void onConfirmDialogPositive(ActionTypes type);
-        void onConfirmDialogNegative(ActionTypes type);
     }
 
     @Override
@@ -71,13 +66,8 @@ public class ConfirmDialog extends DialogFragment implements DialogInterface.OnC
         if (listener == null) {
             return;
         }
-        switch (which) {
-            case Dialog.BUTTON_POSITIVE:
-                listener.onConfirmDialogPositive(type);
-                break;
-            case Dialog.BUTTON_NEGATIVE:
-                listener.onConfirmDialogNegative(type);
-                break;
+        if (which == Dialog.BUTTON_POSITIVE) {
+            listener.onConfirmDialogPositive(type);
         }
     }
 }

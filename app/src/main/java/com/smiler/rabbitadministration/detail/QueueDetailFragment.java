@@ -143,7 +143,7 @@ public class QueueDetailFragment extends DetailFragment<QueueInfo> implements Up
         dataModel.delete((ManagementApplication) getContext().getApplicationContext());
     }
 
-//    public void moveQueue(String newVhost, String newName) {
-//        dataModel.move((ManagementApplication) getContext().getApplicationContext());
-//    }
+    public void moveQueue(String newName) {
+        dataModel.move((ManagementApplication) getContext().getApplicationContext(), newName);
+    }
 }

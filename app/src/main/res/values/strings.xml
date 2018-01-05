@@ -52,6 +52,9 @@
     <string name="filter_use_regex">Use regex</string>
 
     <string name="move_messages">Move messages</string>
+    <string name="move_messages_dialog_text">Enter target queue name for moving messages from selected queue: %s</string>
+    <string name="move_messages_empty_value">Error: target queue name not specified</string>
+    <string name="target_queue">Target queue</string>
     <string name="purge">Purge</string>
     <string name="delete">Delete</string>
     <string name="order">Order</string>

@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.smiler.rabbitadministration.common.ActionTypes;
 import com.smiler.rabbitadministration.common.ConfirmDialog;
 import com.smiler.rabbitadministration.connections.ConnectionDetailFragment;
 import com.smiler.rabbitadministration.connections.ConnectionsRecyclerFragment;
+import com.smiler.rabbitadministration.detail.MoveMessagesDialog;
 import com.smiler.rabbitadministration.detail.QueueDetailFragment;
 import com.smiler.rabbitadministration.info.PolicyActivity;
 import com.smiler.rabbitadministration.overview.OverviewFragment;
@@ -63,11 +65,13 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         ProfileSelector.ProfileSelectorListener,
         ConfirmDialog.ConfirmDialogListener,
+        MoveMessagesDialog.MoveMessagesDialogListener,
         FilterDialog.FilterDialogListener,
         SortDialog.OrderDialogListener,
         FragmentListListener,
         UpdatableFragmentListener
 {
+    private static String TAG = "RMQ-MainActivity";
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -145,6 +149,71 @@ public class MainActivity extends AppCompatActivity implements
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentPageType = (PageType) savedInstanceState.getSerializable(STATE_CURRENT_PAGE);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        PageType type = null;
+        switch (item.getItemId()) {
+            case R.id.nav_overview:
+                type = PageType.OVERVIEW;
+                break;
+            case R.id.nav_queues:
+                type = PageType.QUEUES;
+                break;
+            case R.id.nav_connections:
+                type = PageType.CONNECTIONS;
+                break;
+            case R.id.nav_channels:
+                type = PageType.CHANNELS;
+                break;
+            case R.id.nav_profiles:
+                runProfilesActivity();
+                break;
+            case R.id.nav_settings:
+                runSettingsActivity();
+                break;
+            case R.id.nav_policy:
+                runPolicyActivity();
+                break;
+        }
+        if (type != null) {
+            showFragment(type);
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void runSettingsActivity() {
+        startActivity(new Intent(this, PrefActivity.class));
+    }
+
+    private void runProfilesActivity() {
+        startActivity(new Intent(this, ProfilesActivity.class));
+    }
+
+    private void runPolicyActivity() {
+        startActivity(new Intent(this, PolicyActivity.class));
+    }
+
+    private void setToolbarTitle(PageType type) {
+        int titleRes = R.string.app_name;
+        switch (type) {
+            case OVERVIEW:
+                titleRes = R.string.overview;
+                break;
+            case QUEUES:
+            case QUEUE_DETAIL:
+                titleRes = R.string.queues;
+                break;
+            case CONNECTIONS:
+                titleRes = R.string.connections;
+                break;
+            case CHANNELS:
+                titleRes = R.string.channels;
+                break;
+        }
+        toolbar.setTitle(titleRes);
     }
 
     private void restoreState() {
@@ -276,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements
                 askActionQueue(ActionTypes.QUEUE_DELETE);
                 return true;
             case R.id.action_queue_move:
+                askActionQueue(ActionTypes.QUEUE_MOVE);
                 return true;
         }
 
@@ -326,26 +396,6 @@ public class MainActivity extends AppCompatActivity implements
         invalidateOptionsMenu();
     }
 
-    private void setToolbarTitle(PageType type) {
-        int titleRes = R.string.app_name;
-        switch (type) {
-            case OVERVIEW:
-                titleRes = R.string.overview;
-                break;
-            case QUEUES:
-            case QUEUE_DETAIL:
-                titleRes = R.string.queues;
-                break;
-            case CONNECTIONS:
-                titleRes = R.string.connections;
-                break;
-            case CHANNELS:
-                titleRes = R.string.channels;
-                break;
-        }
-        toolbar.setTitle(titleRes);
-    }
-
     private void showDetails(PageType type, Object data) {
         DetailFragment fragment = null;
         String tag = "";
@@ -382,51 +432,6 @@ public class MainActivity extends AppCompatActivity implements
         invalidateOptionsMenu();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        PageType type = null;
-        switch (item.getItemId()) {
-            case R.id.nav_overview:
-                type = PageType.OVERVIEW;
-                break;
-            case R.id.nav_queues:
-                type = PageType.QUEUES;
-                break;
-            case R.id.nav_connections:
-                type = PageType.CONNECTIONS;
-                break;
-            case R.id.nav_channels:
-                type = PageType.CHANNELS;
-                break;
-            case R.id.nav_profiles:
-                runProfilesActivity();
-                break;
-            case R.id.nav_settings:
-                runSettingsActivity();
-                break;
-            case R.id.nav_policy:
-                runPolicyActivity();
-                break;
-        }
-        if (type != null) {
-            showFragment(type);
-        }
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void runSettingsActivity() {
-        startActivity(new Intent(this, PrefActivity.class));
-    }
-
-    private void runProfilesActivity() {
-        startActivity(new Intent(this, ProfilesActivity.class));
-    }
-
-    private void runPolicyActivity() {
-        startActivity(new Intent(this, PolicyActivity.class));
-    }
-
     private void showProfileDialog() {
         ProfileSelector.newInstance().setListener(this).show(getFragmentManager(), ProfileSelector.TAG);
     }
@@ -453,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements
 //                }
             }
         } catch (Exception e) {
-//            log
+            Log.e(TAG, "Error updating fragment data");
         }
     }
 
@@ -494,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             saveCurrentFilter(filter);
         } catch (Exception e) {
-            // log
+            Log.e(TAG, "Error setting queues filter");
         }
     }
 
@@ -512,7 +517,7 @@ public class MainActivity extends AppCompatActivity implements
                 ((QueuesRecyclerFragment) fragment).setQueuesOrder(sort);
             }
         } catch (Exception e) {
-            // log
+            Log.e(TAG, "Error setting queues order");
         }
         saveCurrentSort(sort);
     }
@@ -543,6 +548,7 @@ public class MainActivity extends AppCompatActivity implements
                 msg = String.format(getString(R.string.purge_success), actionInfo.getText());
                 break;
             case QUEUE_MOVE:
+                showFragment(PageType.QUEUES);
                 msg = String.format(getString(R.string.move_success), actionInfo.getText());
                 break;
         }
@@ -566,8 +572,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onConfirmDialogNegative(ActionTypes type) {
-
+    public void onMoveMessagesPositive(String targetQueue) {
+        QueueDetailFragment fragment = getQueueDetailFragment();
+        if (fragment == null) {
+            return;
+        }
+        fragment.moveQueue(targetQueue);
     }
 
     private QueueDetailFragment getQueueDetailFragment() {
@@ -580,6 +590,7 @@ public class MainActivity extends AppCompatActivity implements
             return (QueueDetailFragment) fragment;
         } catch (ClassCastException e) {
             Toast.makeText(this, String.format(getString(R.string.api_error_queue_detail), ""), Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Error casting details fragment");
             return null;
         }
     }
@@ -594,7 +605,11 @@ public class MainActivity extends AppCompatActivity implements
             Toast.makeText(this, String.format(getString(R.string.api_error_queue_detail), "queue not defined"), Toast.LENGTH_LONG).show();
             return;
         }
-        ConfirmDialog.newInstance(type).setListener(this).setQueueName(qname).show(getFragmentManager(), TAG_FRAGMENT_CONFIRM);
+        if (type == ActionTypes.QUEUE_MOVE) {
+            MoveMessagesDialog.newInstance().setListener(this).setQueueName(qname).show(getFragmentManager(), TAG_FRAGMENT_CONFIRM);
+        } else {
+            ConfirmDialog.newInstance(type).setListener(this).setQueueName(qname).show(getFragmentManager(), TAG_FRAGMENT_CONFIRM);
+        }
     }
 
     private void deleteQueue() {
@@ -606,14 +621,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void purgeQueue() {
-        QueueDetailFragment fragment = getQueueDetailFragment();
-        if (fragment == null) {
-            return;
-        }
-        fragment.purgeQueue();
-    }
-
-    private void updateQueueInfo() {
         QueueDetailFragment fragment = getQueueDetailFragment();
         if (fragment == null) {
             return;

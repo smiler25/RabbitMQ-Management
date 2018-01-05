@@ -12,6 +12,8 @@ import com.smiler.rabbitadministration.VolleyClient;
 import com.smiler.rabbitadministration.base.AsyncTaskResult;
 import com.smiler.rabbitadministration.profiles.Profile;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,8 +71,7 @@ public class BaseApi {
         VolleyClient.getInstance(context).addToRequestQueue(request);
     }
 
-    public static <T> void delete(ManagementApplication context, final ApiCallback<Boolean> callback,
-                                  String path, final Class<T> classType) {
+    public static <T> void delete(ManagementApplication context, final ApiCallback<Boolean> callback, String path) {
         Profile profile = context.getProfile();
         if (profile == null) {
             callback.onError(context.getString(R.string.profile_null));
@@ -80,6 +81,26 @@ public class BaseApi {
         ApiRequest request = new ApiRequest(Request.Method.DELETE, profile.getHost() + path, BaseApi.getHeaders(profile.getAuthKey()),
                 response -> callback.onResult(true),
                 error -> callback.onError(error.toString()));
+
+        VolleyClient.getInstance(context).addToRequestQueue(request);
+    }
+
+    public static <T> void put(ManagementApplication context, final ApiCallback<Boolean> callback,
+                               String path, JSONObject body) {
+        Profile profile = context.getProfile();
+        if (profile == null) {
+            callback.onError(context.getString(R.string.profile_null));
+            return;
+        }
+
+        ApiJsonRequest request = new ApiJsonRequest(
+                Request.Method.PUT,
+                profile.getHost() + path,
+                BaseApi.getHeaders(profile.getAuthKey()),
+                body,
+                response -> callback.onResult(true),
+                error -> callback.onError(error.toString())
+        );
 
         VolleyClient.getInstance(context).addToRequestQueue(request);
     }

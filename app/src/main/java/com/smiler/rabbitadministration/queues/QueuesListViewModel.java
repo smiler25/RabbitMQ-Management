@@ -2,6 +2,7 @@ package com.smiler.rabbitadministration.queues;
 
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.smiler.rabbitadministration.ManagementApplication;
 import com.smiler.rabbitadministration.base.BaseViewModel;
@@ -18,6 +19,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class QueuesListViewModel extends BaseViewModel<ArrayList<QueueInfo>> {
+    private static String TAG = "RMQ-QueuesListViewModel";
+
     @Nullable @Getter @Setter
     private Filter filter;
     @Nullable @Getter @Setter
@@ -70,26 +73,34 @@ public class QueuesListViewModel extends BaseViewModel<ArrayList<QueueInfo>> {
         }
 
         if (sort.getAscending()) {
-            switch (sort.getType()) {
-                case NAME:
-                    Collections.sort(data, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-                case READY:
-                    Collections.sort(data, (o1, o2) -> o1.getReady().compareTo(o2.getReady()));
-                case UNACKED:
-                    Collections.sort(data, (o1, o2) -> o1.getUnacked().compareTo(o2.getUnacked()));
-                case TOTAL:
-                    Collections.sort(data, (o1, o2) -> o1.getTotal().compareTo(o2.getTotal()));
+            try {
+                switch (sort.getType()) {
+                    case NAME:
+                        Collections.sort(data, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+                    case READY:
+                        Collections.sort(data, (o1, o2) -> o1.getReady().compareTo(o2.getReady()));
+                    case UNACKED:
+                        Collections.sort(data, (o1, o2) -> o1.getUnacked().compareTo(o2.getUnacked()));
+                    case TOTAL:
+                        Collections.sort(data, (o1, o2) -> o1.getTotal().compareTo(o2.getTotal()));
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error occurred during sorting");
             }
         } else {
-            switch (sort.getType()) {
-                case NAME:
-                    Collections.sort(data, (o1, o2) -> o2.getName().compareTo(o1.getName()));
-                case READY:
-                    Collections.sort(data, (o1, o2) -> o2.getReady().compareTo(o1.getReady()));
-                case UNACKED:
-                    Collections.sort(data, (o1, o2) -> o2.getUnacked().compareTo(o1.getUnacked()));
-                case TOTAL:
-                    Collections.sort(data, (o1, o2) -> o2.getTotal().compareTo(o1.getTotal()));
+            try {
+                switch (sort.getType()) {
+                    case NAME:
+                        Collections.sort(data, (o1, o2) -> o2.getName().compareTo(o1.getName()));
+                    case READY:
+                        Collections.sort(data, (o1, o2) -> o2.getReady().compareTo(o1.getReady()));
+                    case UNACKED:
+                        Collections.sort(data, (o1, o2) -> o2.getUnacked().compareTo(o1.getUnacked()));
+                    case TOTAL:
+                        Collections.sort(data, (o1, o2) -> o2.getTotal().compareTo(o1.getTotal()));
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error occurred during sorting");
             }
         }
         return data;

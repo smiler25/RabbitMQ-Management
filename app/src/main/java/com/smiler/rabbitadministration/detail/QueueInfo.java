@@ -1,5 +1,7 @@
 package com.smiler.rabbitadministration.detail;
 
+import android.support.annotation.Nullable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smiler.rabbitadministration.R;
@@ -18,13 +20,13 @@ public class QueueInfo {
     private String vhost;
     private Boolean durable;
 
-    @JsonProperty("messages_ready")
+    @JsonProperty("messages_ready") @Nullable
     private Long ready;
 
-    @JsonProperty("messages_unacknowledged")
+    @JsonProperty("messages_unacknowledged") @Nullable
     private Long unacked;
 
-    @JsonProperty("messages")
+    @JsonProperty("messages") @Nullable
     private Long total;
 
     @JsonProperty("message_bytes_persistent")
@@ -73,5 +75,26 @@ public class QueueInfo {
             add(new HumanString(R.string.messages_unacked_ram, Long.toString(messagesUnackedRam)));
             add(new HumanString(R.string.messages_persistent, Long.toString(messagesPersistent)));
         }};
+    }
+
+    public Long getReady() {
+        if (ready == null) {
+            return 0L;
+        }
+        return ready;
+    }
+
+    public Long getTotal() {
+        if (total == null) {
+            return 0L;
+        }
+        return total;
+    }
+
+    public Long getUnacked() {
+        if (unacked == null) {
+            return 0L;
+        }
+        return unacked;
     }
 }
