@@ -41,6 +41,7 @@ import com.smiler.rabbitadministration.info.PolicyActivity;
 import com.smiler.rabbitadministration.overview.OverviewFragment;
 import com.smiler.rabbitadministration.preferences.PrefActivity;
 import com.smiler.rabbitadministration.preferences.Preferences;
+import com.smiler.rabbitadministration.profiles.CredentialsDialog;
 import com.smiler.rabbitadministration.profiles.Profile;
 import com.smiler.rabbitadministration.profiles.ProfileSelector;
 import com.smiler.rabbitadministration.profiles.ProfilesActivity;
@@ -63,8 +64,9 @@ import static com.smiler.rabbitadministration.Constants.TAG_FRAGMENT_CONFIRM;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        ProfileSelector.ProfileSelectorListener,
         ConfirmDialog.ConfirmDialogListener,
+        CredentialsDialog.CredentialsDialogListener,
+        ProfileSelector.ProfileSelectorListener,
         MoveMessagesDialog.MoveMessagesDialogListener,
         FilterDialog.FilterDialogListener,
         SortDialog.OrderDialogListener,
@@ -104,6 +106,14 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
         headerView.findViewById(R.id.nav_select_profile).setOnClickListener(v -> showProfileDialog());
+        headerView.findViewById(R.id.nav_authorize).setOnClickListener(v -> {
+            Profile profile = getProfile();
+            if (profile == null) {
+                Toast.makeText(this, R.string.authorize_availability, Toast.LENGTH_LONG).show();
+                return;
+            }
+            showAuthorizeDialog(profile);
+        });
         navigationView.setNavigationItemSelectedListener(this);
         drawerProfileTitle = headerView.findViewById(R.id.nav_profile);
         preferences = Preferences.getInstance(getApplicationContext());
@@ -257,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements
         String sortTypeValue = statePref.getString(STATE_SORT_TYPE, "");
         boolean sortAsc = statePref.getBoolean(STATE_SORT_ASC, false);
         if (!sortTypeValue.isEmpty()) {
-            SortTypes sortType = null;
+            SortTypes sortType;
             try {
                 sortType = SortTypes.valueOf(sortTypeValue);
             } catch (IllegalArgumentException e) {
@@ -436,6 +446,13 @@ public class MainActivity extends AppCompatActivity implements
         ProfileSelector.newInstance().setListener(this).show(getFragmentManager(), ProfileSelector.TAG);
     }
 
+    private void showAuthorizeDialog(Profile profile) {
+        CredentialsDialog.newInstance()
+                .setProfile(profile)
+                .setListener(this)
+                .show(getFragmentManager(), CredentialsDialog.TAG);
+    }
+
     private void showFilterDialog() {
         FilterDialog.newInstance().setListener(this).show(getFragmentManager(), FilterDialog.TAG);
     }
@@ -472,6 +489,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setProfile(Profile profile) {
         ((ManagementApplication) getApplicationContext()).setProfile(profile);
+        setDrawerProfile(profile);
+        if (!profile.checkCredentials()) {
+            showAuthorizeDialog(profile);
+        }
     }
 
     private Profile getProfile() {
@@ -481,12 +502,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onProfileSelected(Profile profile, boolean save, boolean saveCredentials) {
         profile.setStoreCredentials(saveCredentials);
-        setProfile(profile);
-        setDrawerProfile(profile);
         if (save) {
             profile = AppRepository.getInstance(getApplicationContext()).insertProfile(profile);
         }
         profile.saveCurrent(this);
+        setProfile(profile);
     }
 
     @Override
@@ -626,5 +646,10 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
         fragment.purgeQueue();
+    }
+
+    @Override
+    public void onCredentialsEntered(Profile profile) {
+        setProfile(profile);
     }
 }

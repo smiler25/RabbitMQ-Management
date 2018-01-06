@@ -54,6 +54,9 @@ public class Profile {
     }
 
     private static String generateAuthKey(String login, String password) {
+        if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
+            return null;
+        }
         String credentials = String.format("%s:%s", login, password);
         return Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
     }
@@ -71,5 +74,15 @@ public class Profile {
         return title != null && !title.isEmpty() &&
                 host != null && !host.isEmpty() &&
                 login != null && !login.isEmpty();
+    }
+
+    public boolean checkCredentials() {
+        return password != null && !password.isEmpty() && login != null && !login.isEmpty();
+    }
+
+    public void setCredentials(String login, String password) {
+        this.login = login;
+        this.password = password;
+        this.authKey = generateAuthKey(login, password);
     }
 }

@@ -19,6 +19,8 @@
     <string name="password">Пароль</string>
     <string name="login">Логин</string>
     <string name="select">Выбрать</string>
+    <string name="authorize">Авторизоваться</string>
+    <string name="authorize_availability">Авторизация доступна только при выбранном профилие</string>
     <string name="current_profile">Профиль: %s</string>
     <string name="api_error_queues">Ошибка при получении списка очередей (%s)</string>
     <string name="api_error_overview">Ошибка общей информации (%s)</string>
@@ -112,5 +114,8 @@
     <string name="error_occurred">Возникла ошибка</string>
     <string name="create_success">Создано (%s)</string>
     <string name="update_success">Обновлено (%s)</string>
+    <string name="credentials_form_title">Введите учетные данные для %s</string>
+    <string name="credentials_form_error">Введите логин и пароль</string>
+    <string name="alternative_icon">Альтернативная иконка</string>
 
 </resources>

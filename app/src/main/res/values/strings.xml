@@ -30,6 +30,8 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="select">Select</string>
+    <string name="authorize">Authorize</string>
+    <string name="authorize_availability">Authorization available only if profile selected</string>
     <string name="current_profile">Current profile: %s</string>
     <string name="profile_select_info" translatable="false">(%s @ %s)</string>
     <string name="api_error_queues">List of queues api error (%s)</string>
@@ -40,6 +42,8 @@
     <string name="credentials_not_specified">Credentials not specified</string>
     <string name="profile_null">Profile not specified</string>
     <string name="profile_not_selected">Profile not selected</string>
+    <string name="credentials_form_title">Enter credentials for %s</string>
+    <string name="credentials_form_error">Enter login and password</string>
     <string name="update_in_progress">Updating data</string>
     <string name="remember">Remember</string>
     <string name="remember_credentials">Remember credentials</string>
@@ -162,5 +166,6 @@
     <string name="error_occurred">An error occurred</string>
     <string name="profile_save_error">Unable to save. Specify title, host and login</string>
     <string name="purge_success">Purged (%s)</string>
+    <string name="alternative_icon">Alternative icon</string>
 
 </resources>
