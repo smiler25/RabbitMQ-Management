@@ -239,14 +239,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void restoreProfile() {
+        Profile profile = getProfile();
+        if (profile != null) {
+            setProfile(profile);
+            return;
+        }
         int profileId = Profile.getSavedId(this);
         if (profileId != -1) {
-            Profile profile = AppRepository.getInstance(getApplicationContext()).getProfile(profileId);
+            profile = AppRepository.getInstance(getApplicationContext()).getProfile(profileId);
             if (profile != null) {
                 setProfile(profile);
-                if (!profile.getTitle().isEmpty()) {
-                    setDrawerProfile(profile);
-                }
             }
         }
     }
@@ -489,7 +491,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setProfile(Profile profile) {
         ((ManagementApplication) getApplicationContext()).setProfile(profile);
-        setDrawerProfile(profile);
+        if (!profile.getTitle().isEmpty()) {
+            setDrawerProfile(profile);
+        }
         if (!profile.checkCredentials()) {
             showAuthorizeDialog(profile);
         }
