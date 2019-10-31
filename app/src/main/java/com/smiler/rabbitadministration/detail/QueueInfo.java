@@ -1,7 +1,5 @@
 package com.smiler.rabbitadministration.detail;
 
-import android.support.annotation.Nullable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.smiler.rabbitadministration.R;
@@ -9,6 +7,7 @@ import com.smiler.rabbitadministration.base.HumanString;
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
 import lombok.Data;
 import lombok.ToString;
 

@@ -1,14 +1,14 @@
 package com.smiler.rabbitadministration.profiles;
 
 import android.app.Activity;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 
+import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;

@@ -1,7 +1,6 @@
 package com.smiler.rabbitadministration.views;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -10,6 +9,8 @@ import com.smiler.rabbitadministration.R;
 import com.smiler.rabbitadministration.base.TableRowValue;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
 
 
 public class ValuesTable extends LinearLayout {

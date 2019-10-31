@@ -46,6 +46,6 @@ public class ChannelsRecyclerAdapter extends BaseRecyclerAdapter<Channel, Channe
             user.setText(value.getUser());
             state.setText(value.getState());
             prefetch.setText(value.getPrefetchCount());
-        };
+        }
     }
 }

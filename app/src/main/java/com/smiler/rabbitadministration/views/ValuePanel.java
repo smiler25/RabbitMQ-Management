@@ -1,7 +1,6 @@
 package com.smiler.rabbitadministration.views;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 
 import com.smiler.rabbitadministration.R;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

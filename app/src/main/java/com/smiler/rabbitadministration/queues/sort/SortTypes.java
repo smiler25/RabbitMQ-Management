@@ -5,5 +5,5 @@ public enum SortTypes {
     NAME,
     READY,
     UNACKED,
-    TOTAL;
+    TOTAL
 }

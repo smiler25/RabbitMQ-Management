@@ -1,10 +1,10 @@
 package com.smiler.rabbitadministration;
 
 import android.app.Application;
-import android.support.annotation.Nullable;
 
 import com.smiler.rabbitadministration.profiles.Profile;
 
+import androidx.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 

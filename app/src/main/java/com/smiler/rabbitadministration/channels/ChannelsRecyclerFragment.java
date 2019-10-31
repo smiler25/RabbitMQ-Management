@@ -1,13 +1,13 @@
 package com.smiler.rabbitadministration.channels;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-
 import com.smiler.rabbitadministration.PageType;
 import com.smiler.rabbitadministration.R;
 import com.smiler.rabbitadministration.base.BaseRecyclerFragment;
 
 import java.util.ArrayList;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 
 public class ChannelsRecyclerFragment extends BaseRecyclerFragment<ChannelsViewModel> {

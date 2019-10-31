@@ -1,8 +1,5 @@
 package com.smiler.rabbitadministration.queues;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-
 import com.smiler.rabbitadministration.AppRepository;
 import com.smiler.rabbitadministration.ManagementApplication;
 import com.smiler.rabbitadministration.PageType;
@@ -13,6 +10,9 @@ import com.smiler.rabbitadministration.queues.filter.Filter;
 import com.smiler.rabbitadministration.queues.sort.Sort;
 
 import java.util.ArrayList;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 
 public class QueuesRecyclerFragment extends BaseRecyclerFragment<QueuesListViewModel> {

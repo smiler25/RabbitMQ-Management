@@ -1,10 +1,6 @@
 package com.smiler.rabbitadministration.profiles;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +8,11 @@ import android.widget.Toast;
 
 import com.smiler.rabbitadministration.AppRepository;
 import com.smiler.rabbitadministration.R;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 
 public class ProfilesActivity extends AppCompatActivity implements
@@ -111,7 +112,7 @@ public class ProfilesActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack(null)
                     .add(R.id.list_fragment, detailViewFrag, ProfileViewFragment.TAG)
-                    .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit();
         }
         menu.setGroupVisible(R.id.profile_edit_group, true);
@@ -187,7 +188,7 @@ public class ProfilesActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                     .addToBackStack(null)
                     .add(R.id.list_fragment, detailViewFrag, ProfileViewFragment.TAG)
-                    .setTransition(android.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit();
         }
         menu.setGroupVisible(R.id.profile_edit_group, true);

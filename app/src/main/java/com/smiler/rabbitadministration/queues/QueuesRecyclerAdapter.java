@@ -45,6 +45,6 @@ public class QueuesRecyclerAdapter extends BaseRecyclerAdapter<QueueInfo, Queues
             viewReady.setText(Long.toString(value.getReady()));
             viewUnacked.setText(Long.toString(value.getUnacked()));
             viewTotal.setText(Long.toString(value.getTotal()));
-        };
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.smiler.rabbitadministration.queues;
 
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.smiler.rabbitadministration.ManagementApplication;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
+import androidx.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 

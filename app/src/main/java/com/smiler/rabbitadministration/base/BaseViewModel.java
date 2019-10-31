@@ -1,10 +1,10 @@
 package com.smiler.rabbitadministration.base;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
-
 import com.smiler.rabbitadministration.ManagementApplication;
 import com.smiler.rabbitadministration.common.ActionInfo;
+
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 public abstract class BaseViewModel<T> extends ViewModel {
     protected MutableLiveData<T> data;

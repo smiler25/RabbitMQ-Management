@@ -9,7 +9,6 @@
     <string name="name">Name</string>
     <string name="title">Title</string>
     <string name="value">Value</string>
-    <string name="create">Create</string>
 
     <string name="overview">Overview</string>
     <string name="queues">Queues</string>
@@ -34,17 +33,13 @@
     <string name="authorize_availability">Authorization available only if profile selected</string>
     <string name="current_profile">Current profile: %s</string>
     <string name="profile_select_info" translatable="false">(%s @ %s)</string>
-    <string name="api_error_queues">List of queues api error (%s)</string>
     <string name="api_error_queue_detail">Queue api error (%s)</string>
     <string name="api_error_overview">Overview api error (%s)</string>
-    <string name="api_error_connections">Get connections error (%s)</string>
-    <string name="api_error_channels">Get channels error (%s)</string>
     <string name="credentials_not_specified">Credentials not specified</string>
     <string name="profile_null">Profile not specified</string>
     <string name="profile_not_selected">Profile not selected</string>
     <string name="credentials_form_title">Enter credentials for %s</string>
     <string name="credentials_form_error">Enter login and password</string>
-    <string name="update_in_progress">Updating data</string>
     <string name="remember">Remember</string>
     <string name="remember_credentials">Remember credentials</string>
 
@@ -58,7 +53,6 @@
     <string name="move_messages">Move messages</string>
     <string name="move_messages_dialog_text">Enter target queue name for moving messages from selected queue: %s</string>
     <string name="move_messages_empty_value">Error: target queue name not specified</string>
-    <string name="target_queue">Target queue</string>
     <string name="purge">Purge</string>
     <string name="delete">Delete</string>
     <string name="order">Order</string>
@@ -99,7 +93,6 @@
     <string name="messages_persistent" translatable="false">Messages persistent</string>
 
     <!--connection-->
-    <string name="timeout">Timeout</string>
     <string name="heartbeat" translatable="false">Heartbeat</string>
     <string name="protocol">Protocol</string>
     <string name="connected_at">Connected at</string>
@@ -116,7 +109,6 @@
     <string name="product">Product</string>
     <string name="version">Version</string>
     <string name="platform">Platform</string>
-    <string name="copyright" translatable="false">Copyright</string>
     <string name="information">Information</string>
 
 
@@ -162,7 +154,6 @@
             Questions, suggestions, comments and reviews about the current state of the protection of personal inform at: kolosmiler@gmail.com.\n
     </string>
     <string name="policy">Privacy policy</string>
-    <string name="edit_profile_dialog_title_required">Title required</string>
     <string name="error_occurred">An error occurred</string>
     <string name="profile_save_error">Unable to save. Specify title, host and login</string>
     <string name="purge_success">Purged (%s)</string>

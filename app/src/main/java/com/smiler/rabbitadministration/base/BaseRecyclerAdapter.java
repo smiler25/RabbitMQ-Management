@@ -1,6 +1,5 @@
 package com.smiler.rabbitadministration.base;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -9,6 +8,7 @@ import com.smiler.rabbitadministration.base.interfaces.BaseListListener;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.ButterKnife;
 import lombok.Getter;
 import lombok.Setter;
